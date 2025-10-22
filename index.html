@@ -2,50 +2,59 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Logo Popup and Form</title>
+  <title>Loading Logo to Form</title>
   <style>
     body {
       font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
     }
 
-    /* Modal styles */
-    .modal {
-      display: block;
-      position: fixed;
-      z-index: 1000;
-      padding-top: 100px;
-      left: 0;
+    /* Splash screen */
+    #splash {
+      position: absolute;
       top: 0;
-      width: 100%;
-      height: 100%;
-      overflow: auto;
-      background-color: rgba(0,0,0,0.6);
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      animation: fadeOut 1s ease-in-out 2s forwards;
     }
 
-    .modal-content {
-      background-color: #fff;
-      margin: auto;
-      padding: 20px;
-      border: 1px solid #888;
-      width: 300px;
-      text-align: center;
-      border-radius: 10px;
+    #splash img {
+      width: 200px;
+      height: auto;
     }
 
-    .close-btn {
-      margin-top: 20px;
-      padding: 10px 20px;
-      background-color: #3498db;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
+    /* Fade-out animation */
+    @keyframes fadeOut {
+      to {
+        opacity: 0;
+        visibility: hidden;
+      }
     }
 
+    /* Form container */
     #formContainer {
       display: none;
-      margin-top: 100px;
       text-align: center;
+      opacity: 0;
+      animation: fadeIn 1s ease-in-out forwards;
+    }
+
+    @keyframes fadeIn {
+      to {
+        opacity: 1;
+      }
     }
 
     input[type="text"] {
@@ -62,20 +71,17 @@
       border-radius: 5px;
       cursor: pointer;
     }
+
   </style>
 </head>
 <body>
 
-<!-- Modal -->
-<div id="logoModal" class="modal">
-  <div class="modal-content">
-    <img src="logo.jpg" alt="Logo" width="200">
-    <br>
-    <button class="close-btn" onclick="closeModal()">Continue</button>
-  </div>
+<!-- Splash screen with logo -->
+<div id="splash">
+  <img src="logo.jpg" alt="Logo">
 </div>
 
-<!-- Form -->
+<!-- Form content -->
 <div id="formContainer">
   <h2>Enter Your Details</h2>
   <form action="home.html" method="get">
@@ -85,13 +91,14 @@
   </form>
 </div>
 
+<!-- Script to switch from splash to form -->
 <script>
-  function closeModal() {
-    document.getElementById('logoModal').style.display = 'none';
+  // Wait for splash to fade out, then show form
+  setTimeout(() => {
+    document.getElementById('splash').style.display = 'none';
     document.getElementById('formContainer').style.display = 'block';
-  }
+  }, 3000); // 3 seconds total splash time
 </script>
 
 </body>
 </html>
-
