@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Profile Page</title>
+  <style>
+    /* Basic page styling */
+    body {
+      font-family: "Poppins", sans-serif;
+      background: #f2f6f8; /* Light background */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    /* Container box */
+    .profile-container {
+      background: white;
+      padding: 30px 40px;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      width: 320px;
+    }
+
+    /* Heading */
+    h2 {
+      text-align: center;
+      margin-bottom: 25px;
+      color: #333;
+    }
+
+    /* Input labels and fields */
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 500;
+      color: #444;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"],
+    input[type="number"] {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 20px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 14px;
+      box-sizing: border-box;
+      outline: none;
+      transition: border-color 0.3s;
+    }
+
+    input:focus {
+      border-color: teal;
+    }
+
+    /* Save button */
+    .save-btn {
+      width: 100%;
+      padding: 10px;
+      background-color: teal;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      margin-bottom: 10px;
+    }
+
+    .save-btn:hover {
+      background-color: #007f7f;
+    }
+
+    /* Edit button */
+    .edit-btn {
+      width: 100%;
+      padding: 10px;
+      background-color: #00b3b3;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .edit-btn:hover {
+      background-color: #009999;
+    }
+
+  </style>
+</head>
+<body>
+  <div class="profile-container">
+    <h2>Profile Page</h2>
+    <form>
+      <label for="name">Name</label>
+      <input type="text" id="name">
+
+      <label for="email">Email/Phone</label>
+      <input type="text" id="email">
+
+      <label for="year">Year</label>
+      <input type="number" id="year">
+
+      <button class="save-btn" type="submit">Save Profile</button>
+      <button class="edit-btn" type="button">Edit Profile</button>
+    </form>
+  </div>
+</body>
+</html>
