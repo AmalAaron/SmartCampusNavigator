@@ -21,10 +21,10 @@
       border-radius: 12px;
       box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
       width: 320px;
+      text-align: center;
     }
 
     h2 {
-      text-align: center;
       margin-bottom: 25px;
       color: #333;
     }
@@ -34,6 +34,7 @@
       margin-bottom: 6px;
       font-weight: 500;
       color: #444;
+      text-align: left;
     }
 
     input[type="text"],
@@ -73,7 +74,7 @@
 <body>
   <div class="profile-container">
     <h2>Profile Page</h2>
-    <form>
+    <form id="profileForm">
       <label for="name">Name</label>
       <input type="text" id="name" disabled>
 
@@ -87,20 +88,18 @@
     </form>
   </div>
 
-<input type="text" id="name" disabled>
-<input type="text" id="college" disabled>
-<input type="number" id="year" disabled>
+  <script>
+    // Load data from localStorage
+    const nameInput = document.getElementById('name');
+    const collegeInput = document.getElementById('college');
+    const yearInput = document.getElementById('year');
 
-<script>
-  document.getElementById('name').value = localStorage.getItem('name') || '';
-  document.getElementById('college').value = localStorage.getItem('college') || '';
-  document.getElementById('year').value = localStorage.getItem('year') || '';
-
-
+    nameInput.value = localStorage.getItem('name') || '';
+    collegeInput.value = localStorage.getItem('college') || '';
+    yearInput.value = localStorage.getItem('year') || '';
 
     const editBtn = document.getElementById('editBtn');
-    const inputs = document.querySelectorAll('input');
-
+    const inputs = [nameInput, collegeInput, yearInput];
     let editing = false;
 
     editBtn.addEventListener('click', () => {
@@ -109,11 +108,13 @@
       editBtn.textContent = editing ? 'Save Changes' : 'Edit Profile';
 
       if (!editing) {
+        // Save updated data to localStorage
+        localStorage.setItem('name', nameInput.value);
+        localStorage.setItem('college', collegeInput.value);
+        localStorage.setItem('year', yearInput.value);
         alert('Profile updated successfully!');
       }
     });
   </script>
-  
-
 </body>
 </html>
