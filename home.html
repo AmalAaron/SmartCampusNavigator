@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campus Navigation Hub</title>
+    
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --primary-color: #1E3A8A;
+            --accent-color: #3B82F6;
+            --background-color: #F3F4F6;
+            --card-bg: #FFFFFF;
+            --highlight-color: #FBBF24;
+            --text-primary: #111827;
+            --text-secondary: #6B7280;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Poppins', sans-serif; background: var(--background-color); color: var(--text-primary); }
+        .container { max-width: 500px; margin: 0 auto; background: var(--card-bg); min-height: 100vh; display: flex; flex-direction: column; }
+
+        header { background: var(--primary-color); color: #fff; padding: 20px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        header h1 { font-size: 24px; margin-bottom: 5px; }
+        header p { font-size: 13px; opacity: 0.9; }
+
+        .search-bar { padding: 15px; background: var(--card-bg); border-bottom: 1px solid #e5e7eb; }
+        .search-bar input {
+            width: 100%; padding: 12px 15px; border: 1px solid #d1d5db; border-radius: 25px;
+            font-size: 14px; background: #ffffff; color: var(--text-primary); transition: all 0.3s ease;
+        }
+        .search-bar input:focus {
+            outline: none; background: #fff; border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(59,130,246,0.2);
+        }
+
+        main { flex: 1; padding: 15px; overflow-y: auto; }
+        .section { margin-bottom: 20px; }
+        .section-title {
+            font-size: 14px; font-weight: 600; color: var(--primary-color);
+            text-transform: uppercase; margin-bottom: 12px; letter-spacing: 0.5px;
+        }
+
+        .card {
+            background: var(--card-bg); border-radius: 15px; padding: 15px; margin-bottom: 15px;
+            border: 1px solid #e5e7eb; display: flex; align-items: center; gap: 15px;
+            cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+        .card:hover { box-shadow: 0 10px 20px rgba(0,0,0,0.1); transform: translateY(-2px); }
+
+        .card-icon {
+            width: 50px; height: 50px;
+            background: var(--highlight-color); color: #fff; border-radius: 15px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 24px; flex-shrink: 0; transition: all 0.3s ease;
+        }
+        .card:hover .card-icon { transform: scale(1.1); }
+
+        .card-content h3 { font-size: 15px; margin-bottom: 4px; color: var(--text-primary); }
+        .card-content p { font-size: 12px; color: var(--text-secondary); }
+
+        .quick-access { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .quick-btn {
+            background: var(--primary-color); color: #fff; padding: 20px 15px;
+            border-radius: 15px; border: none; text-align: center; cursor: pointer;
+            transition: all 0.3s ease; font-size: 13px; font-weight: 600;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+        .quick-btn:hover { transform: translateY(-3px) scale(1.03); background: var(--accent-color); }
+        .quick-btn i { display: block; font-size: 28px; margin-bottom: 8px; }
+
+        nav {
+            background: var(--card-bg); border-top: 1px solid #e5e7eb; display: flex;
+            justify-content: space-around; padding: 12px 0; box-shadow: 0 -4px 12px rgba(0,0,0,0.05);
+        }
+        .nav-item {
+            display: flex; flex-direction: column; align-items: center; gap: 5px; cursor: pointer;
+            padding: 10px 15px; color: #6B7280; transition: all 0.3s ease; font-size: 12px; position: relative;
+        }
+        .nav-item i {
+            font-size: 22px; color: var(--highlight-color); transition: all 0.3s ease;
+        }
+        .nav-item.active i, .nav-item:hover i { transform: scale(1.2); color: var(--primary-color); }
+        .nav-item.active, .nav-item:hover { color: var(--primary-color); }
+
+        .badge {
+            background-color: var(--primary-color); color: #fff; border-radius: 50%;
+            width: 20px; height: 20px; display: flex; align-items: center; justify-content: center;
+            font-size: 11px; font-weight: 600; position: absolute; top: -5px; right: -5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📍 Campus Navigation Hub</h1>
+            <p>Seamless Navigation Across Campus Facilities</p>
+        </header>
+
+        <div class="search-bar">
+            <input type="text" placeholder="Search locations, events, or campus services...">
+        </div>
+
+        <main>
+            <div class="section">
+                <div class="section-title">Quick Access</div>
+                <div class="quick-access">
+                    <button class="quick-btn" onclick="location.href='map.html'">
+                        <i class="fas fa-map"></i>
+                        Interactive Campus Map
+                    </button>
+                    <button class="quick-btn" onclick="location.href='events.html'">
+                        <i class="fas fa-calendar"></i>
+                        Upcoming Campus Events
+                    </button>
+                    <button class="quick-btn" onclick="location.href='dining.html'">
+                        <i class="fas fa-utensils"></i>
+                        Dining & Cafeteria
+                    </button>
+                    <button class="quick-btn" onclick="location.href='library.html'">
+                        <i class="fas fa-book"></i>
+                        Central Library Access
+                    </button>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">Nearby Locations</div>
+                <div class="card">
+                    <div class="card-icon"><i class="fas fa-building"></i></div>
+                    <div class="card-content">
+                        <h3>Engineering Block A</h3>
+                        <p>150m • Accessible Now</p>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-icon"><i class="fas fa-book"></i></div>
+                    <div class="card-content">
+                        <h3>Central Library</h3>
+                        <p>280m • Currently Open</p>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-icon"><i class="fas fa-utensils"></i></div>
+                    <div class="card-content">
+                        <h3>Main Cafeteria</h3>
+                        <p>320m • Lunch Hours 12-2 PM</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">Upcoming Events</div>
+                <div class="card">
+                    <div class="card-icon"><i class="fas fa-users"></i></div>
+                    <div class="card-content">
+                        <h3>Tech Fest 2025</h3>
+                        <p>Today • 3:00 PM • Auditorium</p>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-icon"><i class="fas fa-basketball"></i></div>
+                    <div class="card-content">
+                        <h3>Basketball Tournament</h3>
+                        <p>Tomorrow • 4:00 PM • Sports Complex</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <nav>
+            <div class="nav-item active">
+                <i class="fas fa-home"></i>
+                <span>Home</span>
+            </div>
+            <div class="nav-item" onclick="location.href='map.html'">
+                <i class="fas fa-map-location-dot"></i>
+                <span>Campus Map</span>
+            </div>
+            <div class="nav-item" onclick="location.href='notifications.html'">
+                <i class="fas fa-bell"></i>
+                <span>Notifications</span>
+                <div class="badge">2</div>
+            </div>
+            <div class="nav-item" onclick="location.href='profile.html'">
+                <i class="fas fa-user"></i>
+                <span>User Profile</span>
+            </div>
+        </nav>
+    </div>
+</body>
+</html>
