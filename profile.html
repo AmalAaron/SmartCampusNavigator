@@ -10,15 +10,14 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-        /* Shared styles from notifications.html for consistency */
         :root {
-            --primary-color: #1E3A8A; /* Dark Blue */
-            --accent-color: #3B82F6; /* Bright Blue */
-            --background-color: #F3F4F6;
-            --card-bg: #FFFFFF;
-            --highlight-color: #FBBF24;
-            --text-primary: #111827;
-            --text-secondary: #6B7280;
+            --primary-color: #1D4ED8; /* Strong Blue */
+            --accent-color: #FBBF24;  /* Bright Yellow */
+            --background-color: #FEF9C3; /* Soft Yellow Background */
+            --card-bg: #FFFFFF;         
+            --highlight-color: #FACC15;
+            --text-primary: #1F2937;   
+            --text-secondary: #374151; 
         }
         
         body {
@@ -31,7 +30,6 @@
             padding: 0;
         }
 
-        /* Mobile Container for Fixed Layout */
         .mobile-container {
             width: 100%;
             max-width: 500px; 
@@ -46,7 +44,7 @@
 
         header {
             background-color: var(--primary-color);
-            color: #fff;
+            color: var(--background-color);
             padding: 1rem;
             text-align: center;
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
@@ -55,7 +53,6 @@
         header h1 { font-size: 1.5rem; font-weight: 700; }
         header p { font-size: 0.875rem; opacity: 0.9; }
 
-        /* Dynamic Content Area */
         #content-area {
             flex-grow: 1;
             overflow-y: auto;
@@ -64,7 +61,6 @@
             width: 100%;
         }
 
-        /* --- BOTTOM NAVIGATION STYLES --- */
         nav {
             position: fixed; 
             bottom: 0;
@@ -87,8 +83,6 @@
         .nav-item i {
             font-size: 22px; color: var(--text-secondary); transition: all 0.2s ease;
         }
-        
-        /* ACTIVE STATE: Profile is active for this page */
         .nav-item#nav-profile { 
             color: var(--primary-color) !important; 
             transform: scale(1.05);
@@ -113,49 +107,41 @@
             <p id="header-subtitle">Manage your personal information</p>
         </header>
 
-        <!-- Profile Content Area -->
         <div id="content-area">
             
-            <!-- NEW: User Profile Title Box with color -->
-            <div class="mb-6 p-6 flex items-center justify-center flex-col rounded-xl shadow-lg bg-indigo-600 text-white border border-indigo-500">
+            <div class="mb-6 p-6 flex items-center justify-center flex-col rounded-xl shadow-lg" style="background-color: var(--accent-color); color: var(--primary-color); border: 2px solid var(--primary-color);">
                 <i class="fas fa-user-circle text-6xl mb-3"></i>
-                <!-- Dynamic Content Placeholders -->
                 <h3 id="profile-name" class="text-2xl font-bold">Loading...</h3>
                 <p id="profile-details" class="text-sm opacity-90">Fetching details...</p>
             </div>
 
-            <!-- ORIGINAL: Form Block -->
             <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-100">
                 <h2 class="text-2xl font-semibold text-center text-gray-800 mb-6">Account Settings</h2>
                 
                 <form id="profile-form" class="space-y-4">
-                    <!-- Name Field -->
                     <div>
                         <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Name</label>
                         <input type="text" id="name" placeholder="Loading..." disabled
-                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500 transition duration-150">
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 transition duration-150">
                     </div>
 
-                    <!-- Institution/College Field (using the 'email' ID for minimal change) -->
                     <div>
                         <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Institution/College</label>
                         <input type="text" id="email" placeholder="Loading..." disabled
-                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500 transition duration-150">
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 transition duration-150">
                     </div>
 
-                    <!-- Year Field -->
                     <div>
                         <label for="year" class="block text-sm font-medium text-gray-700 mb-1">Graduation Year</label>
                         <input type="number" id="year" placeholder="Loading..." disabled
-                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500 transition duration-150">
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 transition duration-150">
                     </div>
 
-                    <!-- Action Buttons -->
                     <div class="pt-4 space-y-3">
-                        <button id="save-btn" class="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-lg transition duration-200 shadow-md" type="submit" disabled>
+                        <button id="save-btn" class="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition duration-200 shadow-md" type="submit" disabled>
                             Save Profile
                         </button>
-                        <button id="edit-btn" class="w-full py-3 bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold rounded-lg transition duration-200" type="button">
+                        <button id="edit-btn" class="w-full py-3 bg-yellow-400 hover:bg-yellow-500 text-gray-800 font-semibold rounded-lg transition duration-200" type="button">
                             Edit Profile
                         </button>
                     </div>
@@ -163,28 +149,20 @@
             </div>
         </div>
 
-        <!-- The Fixed Bottom Navigation Bar (Kept as is) -->
         <nav>
-            <!-- Links to external files (will error here) -->
             <div class="nav-item" id="nav-home" onclick="location.href='home.html'">
                 <i class="fas fa-home"></i>
                 <span>Home</span>
             </div>
-             
-            <!-- Campus Map reloads index.html -->
             <div class="nav-item" id="nav-map" onclick="location.href='index.html'">
                 <i class="fas fa-map-location-dot"></i>
                 <span>Campus Map</span>
             </div>
-            
-            <!-- Notifications page -->
             <div class="nav-item" id="nav-notifications" onclick="location.href='notifications.html'">
                 <i class="fas fa-bell"></i>
                 <span>Notifications</span>
                 <div class="badge">2</div>
             </div>
-            
-            <!-- This item is active on this page -->
             <div class="nav-item" id="nav-profile" onclick="location.href='profile.html'">
                 <i class="fas fa-user"></i>
                 <span>Profile</span>
@@ -197,15 +175,13 @@
             const profileNameEl = document.getElementById('profile-name');
             const profileDetailsEl = document.getElementById('profile-details');
             const nameInput = document.getElementById('name');
-            const emailInput = document.getElementById('email'); // Used for College/Institution
+            const emailInput = document.getElementById('email');
             const yearInput = document.getElementById('year');
             const saveBtn = document.getElementById('save-btn');
             const editBtn = document.getElementById('edit-btn');
             const profileForm = document.getElementById('profile-form');
 
-            // 1. Function to retrieve data from localStorage
             const fetchProfileData = async () => {
-                // Simulate a small delay for a loading effect
                 await new Promise(resolve => setTimeout(resolve, 500)); 
                 
                 const storedName = localStorage.getItem('name');
@@ -213,77 +189,47 @@
                 const storedYear = localStorage.getItem('year');
 
                 if (storedName && storedCollege && storedYear) {
-                    return {
-                        name: storedName,
-                        college: storedCollege,
-                        year: parseInt(storedYear, 10),
-                        role: "Student"
-                    };
+                    return { name: storedName, college: storedCollege, year: parseInt(storedYear, 10), role: "Student" };
                 } else {
-                    // Fallback for initial load if the form hasn't been submitted yet
-                    return {
-                        name: "Guest User",
-                        college: "Please fill out the entry form",
-                        year: new Date().getFullYear(),
-                        role: "Visitor"
-                    };
+                    return { name: "Guest User", college: "Please fill out the entry form", year: new Date().getFullYear(), role: "Visitor" };
                 }
             };
 
-            // 2. Function to populate the DOM elements
             const populateProfile = (data) => {
-                if (!data) {
-                    profileNameEl.textContent = "Data Error";
-                    profileDetailsEl.textContent = "Could not load profile.";
-                    return;
-                }
-
-                // Populate Profile Card
                 profileNameEl.textContent = data.name;
                 profileDetailsEl.textContent = `${data.college} / Class of ${data.year}`;
-
-                // Populate Form Fields
                 nameInput.value = data.name;
-                emailInput.value = data.college; // College goes into the 'Institution/College' field
+                emailInput.value = data.college;
                 yearInput.value = data.year;
-
-                // Enable the edit button once data is loaded
                 editBtn.disabled = false;
             };
 
-            // 3. Function to handle saving (writes back to localStorage)
             const handleSave = async (event) => {
                 event.preventDefault();
                 saveBtn.textContent = "Saving...";
                 saveBtn.disabled = true;
 
-                // Save updated data back to localStorage
                 localStorage.setItem('name', nameInput.value);
-                localStorage.setItem('college', emailInput.value); // Institution/College is saved as 'college'
+                localStorage.setItem('college', emailInput.value);
                 localStorage.setItem('year', yearInput.value);
 
-                await new Promise(resolve => setTimeout(resolve, 800)); // Simulate save delay
+                await new Promise(resolve => setTimeout(resolve, 800));
 
                 saveBtn.textContent = "Profile Saved!";
-                saveBtn.classList.remove('bg-indigo-600', 'hover:bg-indigo-700');
-                saveBtn.classList.add('bg-green-600', 'hover:bg-green-700');
+                saveBtn.classList.remove('bg-blue-600', 'hover:bg-blue-700');
+                saveBtn.classList.add('bg-yellow-500', 'hover:bg-yellow-600');
                 
-                // Disable fields and buttons after saving
                 setFormEditable(false);
-                
-                // Update profile card with new name/year/college
                 profileNameEl.textContent = nameInput.value;
                 profileDetailsEl.textContent = `${emailInput.value} / Class of ${yearInput.value}`;
 
-
                 setTimeout(() => {
                     saveBtn.textContent = "Save Profile";
-                    saveBtn.classList.remove('bg-green-600', 'hover:bg-green-700');
-                    saveBtn.classList.add('bg-indigo-600', 'hover:bg-indigo-700');
+                    saveBtn.classList.remove('bg-yellow-500', 'hover:bg-yellow-600');
+                    saveBtn.classList.add('bg-blue-600', 'hover:bg-blue-700');
                 }, 2000);
             };
             
-            // 4. Helper function to toggle form edit state
             const setFormEditable = (isEditable) => {
                 nameInput.disabled = !isEditable;
                 emailInput.disabled = !isEditable;
@@ -293,33 +239,25 @@
                 if (isEditable) {
                     editBtn.textContent = "Cancel Edit";
                     editBtn.classList.add('bg-red-500', 'hover:bg-red-600');
-                    editBtn.classList.remove('bg-gray-200', 'hover:bg-gray-300', 'text-gray-800');
+                    editBtn.classList.remove('bg-yellow-400', 'hover:bg-yellow-500', 'text-gray-800');
                 } else {
                     editBtn.textContent = "Edit Profile";
                     editBtn.classList.remove('bg-red-500', 'hover:bg-red-600');
-                    editBtn.classList.add('bg-gray-200', 'hover:bg-gray-300', 'text-gray-800');
+                    editBtn.classList.add('bg-yellow-400', 'hover:bg-yellow-500', 'text-gray-800');
                 }
             }
 
-            // --- Event Listeners ---
             editBtn.addEventListener('click', () => {
                 const isCurrentlyEditable = !nameInput.disabled;
                 setFormEditable(!isCurrentlyEditable);
-                
-                // If canceling, reload original data
-                if (isCurrentlyEditable) {
-                    // Re-fetch data to revert changes if user cancels editing
-                    fetchProfileData().then(populateProfile); 
-                }
+                if (isCurrentlyEditable) fetchProfileData().then(populateProfile); 
             });
 
             profileForm.addEventListener('submit', handleSave);
 
-            // --- Initial Load ---
-            // Start by fetching data and populating the page
             fetchProfileData().then(populateProfile);
-            setFormEditable(false); // Ensure form is locked initially
-            editBtn.disabled = true; // Disable edit until data loads
+            setFormEditable(false);
+            editBtn.disabled = true;
         });
     </script>
 </body>
