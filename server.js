@@ -13,7 +13,7 @@ app.get("/", (req, res) => {
 });
 
 // Optional: handle form redirect
-app.get("/home.html", (req, res) => {
+app.get("home.html", (req, res) => {
   res.sendFile(path.join(__dirname, "home.html"));
 });
 

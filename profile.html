@@ -87,11 +87,16 @@
     </form>
   </div>
 
-  <script>
-    const params = new URLSearchParams(window.location.search);
-    document.getElementById('name').value = params.get('name') || '';
-    document.getElementById('college').value = params.get('college') || '';
-    document.getElementById('year').value = params.get('year') || '';
+<input type="text" id="name" disabled>
+<input type="text" id="college" disabled>
+<input type="number" id="year" disabled>
+
+<script>
+  document.getElementById('name').value = localStorage.getItem('name') || '';
+  document.getElementById('college').value = localStorage.getItem('college') || '';
+  document.getElementById('year').value = localStorage.getItem('year') || '';
+
+
 
     const editBtn = document.getElementById('editBtn');
     const inputs = document.querySelectorAll('input');
