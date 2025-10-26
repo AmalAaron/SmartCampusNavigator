@@ -95,6 +95,7 @@
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <header>
@@ -110,19 +111,19 @@
             <div class="section">
                 <div class="section-title">Quick Access</div>
                 <div class="quick-access">
-                    <button class="quick-btn" onclick="location.href='map.html'">
+                    <button class="quick-btn" onclick="navigateTo('map.html')">
                         <i class="fas fa-map"></i>
                         Interactive Campus Map
                     </button>
-                    <button class="quick-btn" onclick="location.href='events.html'">
+                    <button class="quick-btn" onclick="navigateTo('events.html')">
                         <i class="fas fa-calendar"></i>
                         Upcoming Campus Events
                     </button>
-                    <button class="quick-btn" onclick="location.href='dining.html'">
+                    <button class="quick-btn" onclick="navigateTo('dining.html')">
                         <i class="fas fa-utensils"></i>
                         Dining & Cafeteria
                     </button>
-                    <button class="quick-btn" onclick="location.href='library.html'">
+                    <button class="quick-btn" onclick="navigateTo('library.html')">
                         <i class="fas fa-book"></i>
                         Central Library Access
                     </button>
@@ -174,24 +175,38 @@
         </main>
 
         <nav>
-            <div class="nav-item active">
+            <div class="nav-item active" onclick="setActive(this)">
                 <i class="fas fa-home"></i>
                 <span>Home</span>
             </div>
-            <div class="nav-item" onclick="location.href='map.html'">
+            <div class="nav-item" onclick="navigateTo('map.html', this)">
                 <i class="fas fa-map-location-dot"></i>
                 <span>Campus Map</span>
             </div>
-            <div class="nav-item" onclick="location.href='notifications.html'">
+            <div class="nav-item" onclick="navigateTo('notifications.html', this)">
                 <i class="fas fa-bell"></i>
                 <span>Notifications</span>
                 <div class="badge">2</div>
             </div>
-            <div class="nav-item" onclick="location.href='profile.html'">
+            <div class="nav-item" onclick="navigateTo('profile.html', this)">
                 <i class="fas fa-user"></i>
                 <span>User Profile</span>
             </div>
         </nav>
     </div>
+
+    <!-- ✅ Script added correctly here -->
+    <script>
+        function navigateTo(page, element = null) {
+            if (element) setActive(element);
+            window.location.href = page;
+        }
+
+        function setActive(selectedItem) {
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+            selectedItem.classList.add('active');
+        }
+    </script>
 </body>
 </html>
+
