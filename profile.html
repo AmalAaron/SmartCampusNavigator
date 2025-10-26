@@ -5,9 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Profile Page</title>
   <style>
+    /* Basic page styling */
     body {
       font-family: "Poppins", sans-serif;
-      background: #f2f6f8;
+      background: #f2f6f8; /* Light background */
       display: flex;
       justify-content: center;
       align-items: center;
@@ -15,29 +16,33 @@
       margin: 0;
     }
 
+    /* Container box */
     .profile-container {
       background: white;
       padding: 30px 40px;
       border-radius: 12px;
       box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
       width: 320px;
-      text-align: center;
     }
 
+    /* Heading */
     h2 {
+      text-align: center;
       margin-bottom: 25px;
       color: #333;
     }
 
+    /* Input labels and fields */
     label {
       display: block;
       margin-bottom: 6px;
       font-weight: 500;
       color: #444;
-      text-align: left;
     }
 
     input[type="text"],
+    input[type="email"],
+    input[type="tel"],
     input[type="number"] {
       width: 100%;
       padding: 10px;
@@ -54,7 +59,8 @@
       border-color: teal;
     }
 
-    .edit-btn {
+    /* Save button */
+    .save-btn {
       width: 100%;
       padding: 10px;
       background-color: teal;
@@ -64,134 +70,48 @@
       font-size: 16px;
       cursor: pointer;
       transition: background-color 0.3s;
+      margin-bottom: 10px;
+    }
+
+    .save-btn:hover {
+      background-color: #007f7f;
+    }
+
+    /* Edit button */
+    .edit-btn {
+      width: 100%;
+      padding: 10px;
+      background-color: #00b3b3;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.3s;
     }
 
     .edit-btn:hover {
-      background-color: #007f7f;
+      background-color: #009999;
     }
+
   </style>
 </head>
 <body>
   <div class="profile-container">
     <h2>Profile Page</h2>
-    <form id="profileForm">
+    <form>
       <label for="name">Name</label>
-      <input type="text" id="name" disabled>
+      <input type="text" id="name">
 
-      <label for="college">College</label>
-      <input type="text" id="college" disabled>
+      <label for="email">Email/Phone</label>
+      <input type="text" id="email">
 
       <label for="year">Year</label>
-      <input type="number" id="year" disabled>
+      <input type="number" id="year">
 
-      <button class="edit-btn" type="button" id="editBtn">Edit Profile</button>
+      <button class="save-btn" type="submit">Save Profile</button>
+      <button class="edit-btn" type="button">Edit Profile</button>
     </form>
   </div>
-
-  <script>
-    // Load data from localStorage
-    const nameInput = document.getElementById('name');
-    const collegeInput = document.getElementById('college');
-    const yearInput = document.getElementById('year');
-
-    nameInput.value = localStorage.getItem('name') || '';
-    collegeInput.value = localStorage.getItem('college') || '';
-    yearInput.value = localStorage.getItem('year') || '';
-
-    const editBtn = document.getElementById('editBtn');
-    const inputs = [nameInput, collegeInput, yearInput];
-    let editing = false;
-
-    editBtn.addEventListener('click', () => {
-      editing = !editing;
-      inputs.forEach(input => input.disabled = !editing);
-      editBtn.textContent = editing ? 'Save Changes' : 'Edit Profile';
-
-      if (!editing) {
-        // Save updated data to localStorage
-        localStorage.setItem('name', nameInput.value);
-        localStorage.setItem('college', collegeInput.value);
-        localStorage.setItem('year', yearInput.value);
-        alert('Profile updated successfully!');
-      }
-    });
-  </script>
-  // Select all nav items
-const navItems = document.querySelectorAll('.nav-item');
-
-// Remove 'active' from all and add to clicked one
-navItems.forEach(item => {
-    item.addEventListener('click', () => {
-        navItems.forEach(nav => nav.classList.remove('active'));
-        item.classList.add('active');
-    });
-});
-
-// Navigation Logic
-document.getElementById('homeBtn').addEventListener('click', () => {
-    window.location.href = 'home.html';
-});
-
-document.getElementById('dashboardBtn').addEventListener('click', () => {
-    window.location.href = 'dashboard.html';
-});
-
-document.getElementById('mapBtn').addEventListener('click', () => {
-    window.location.href = 'map.html';
-});
-
-document.getElementById('notificationBtn').addEventListener('click', () => {
-    window.location.href = 'notifications.html';
-});
-
-document.getElementById('profileBtn').addEventListener('click', () => {
-    window.location.href = 'profile.html';
-});
-
-
 </body>
-<body>
-    <div class="container">
-        <header>
-            <h1>📍 Campus Navigation Hub</h1>
-            <p>Seamless Navigation Across Campus Facilities</p>
-        </header>
-
-        <div class="search-bar">
-            <input type="text" placeholder="Search locations, events, or campus services...">
-        </div>
-
-        <main>
-            <!-- Your existing content sections remain here -->
-        </main>
-
-        <!-- Bottom Navigation -->
-        <nav>
-            <div class="nav-item" id="homeBtn">
-                <i class="fas fa-home"></i>
-                <span>Home</span>
-            </div>
-            <div class="nav-item" id="dashboardBtn">
-                <i class="fas fa-tachometer-alt"></i>
-                <span>Dashboard</span>
-            </div>
-            <div class="nav-item" id="mapBtn">
-                <i class="fas fa-map-location-dot"></i>
-                <span>Campus Map</span>
-            </div>
-            <div class="nav-item" id="notificationBtn">
-                <i class="fas fa-bell"></i>
-                <span>Notifications</span>
-                <div class="badge">2</div>
-            </div>
-            <div class="nav-item" id="profileBtn">
-                <i class="fas fa-user"></i>
-                <span>User Profile</span>
-            </div>
-        </nav>
-    </div>
-
-    <script src="script.js"></script>
-</body>
-
 </html>
