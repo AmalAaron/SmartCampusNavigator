@@ -1,78 +1,83 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>St. Joseph's College of Engineering — Map</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>St. Joseph's College of Engineering — Campus Map</title>
 
   <!-- Leaflet CSS -->
   <link
     rel="stylesheet"
-    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    href="https://unpkg.com/leaflet/dist/leaflet.css"
   />
 
-  <!-- Style to make map visible -->
   <style>
-    html, body {
-      height: 100%;
+    body {
       margin: 0;
-      padding: 0;
+      font-family: "Poppins", sans-serif;
+      background: #f8f9fa;
+      color: #333;
+      text-align: center;
+    }
+    h2 {
+      margin: 20px 0 5px;
+      font-weight: 700;
+    }
+    p {
+      margin: 0 0 10px;
     }
     #map {
-      height: 90vh; /* 90% of screen height */
-      width: 100%;  /* full width */
-    }
-    h2, p {
-      text-align: center;
-      font-family: Arial, sans-serif;
+      height: 90vh;
+      width: 100%;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
     }
   </style>
 </head>
-
 <body>
-  <h2>St. Joseph's College of Engineering — Interactive Map</h2>
-  <p>Click markers for details. Click anywhere on the map to add a marker.</p>
+
+  <h2>St. Joseph's College of Engineering — Campus Map</h2>
+  <p>Click the markers to see block names.</p>
 
   <div id="map"></div>
 
   <!-- Leaflet JS -->
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
   <script>
-    // Initialize map (centered on your college)
-    const map = L.map('map').setView([12.8696, 80.2211], 17);
+    // Initialize the map focused on St. Joseph’s College of Engineering
+    var map = L.map('map').setView([12.8686, 80.2223], 18);
 
-    // Load map tiles
+    // Add OpenStreetMap tiles
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      maxZoom: 19,
-      attribution: '&copy; OpenStreetMap'
+      attribution: '&copy; OpenStreetMap contributors'
     }).addTo(map);
 
-    // Add markers for key places
-    const campusPoints = [
-      { name: "Admin Block", coords: [12.8699, 80.2205] },
-      { name: "Library", coords: [12.8688, 80.2217] },
-      { name: "Girls Hostel", coords: [12.8684, 80.2222] },
-      { name: "Boys Hostel", coords: [12.8706, 80.2200] },
-      { name: "Football Ground", coords: [12.8710, 80.2218] },
-      { name: "Exam Hall Block", coords: [12.8682, 80.2206] },
-      { name: "Chapel", coords: [12.8680, 80.2204] }
+    // Define key locations inside the campus
+    var markers = [
+      { lat: 12.8686, lng: 80.2223, name: "Main Entrance" },
+      { lat: 12.8688, lng: 80.2230, name: "Admin Block" },
+      { lat: 12.8682, lng: 80.2229, name: "IT Department" },
+      { lat: 12.8684, lng: 80.2225, name: "Library" },
+      { lat: 12.8689, lng: 80.2221, name: "CSE Department" },
+      { lat: 12.8690, lng: 80.2233, name: "EEE Block" },
+      { lat: 12.8681, lng: 80.2220, name: "Mechanical Block" },
+      { lat: 12.8687, lng: 80.2236, name: "Auditorium" },
     ];
 
-    campusPoints.forEach(point => {
-      L.marker(point.coords)
+    // Add the markers to the map
+    markers.forEach(m => {
+      L.marker([m.lat, m.lng])
         .addTo(map)
-        .bindPopup(`<b>${point.name}</b>`);
+        .bindPopup(`<b>${m.name}</b>`);
     });
 
-    // Allow clicking to add a custom marker
-    map.on('click', e => {
-      const { lat, lng } = e.latlng;
-      L.marker([lat, lng])
-        .addTo(map)
-        .bindPopup(`Custom Marker<br>Lat: ${lat.toFixed(5)}, Lng: ${lng.toFixed(5)}`)
-        .openPopup();
-    });
+    // Draw a light rectangle boundary to highlight campus area
+    var bounds = [
+      [12.8678, 80.2215],
+      [12.8695, 80.2237]
+    ];
+    L.rectangle(bounds, { color: "#007bff", weight: 1, fillOpacity: 0.05 }).addTo(map);
   </script>
+
 </body>
 </html>
