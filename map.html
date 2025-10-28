@@ -1,34 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Campus Navigation Hub</title>
-    
-    <!-- Google Font -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-    
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <style>
-        :root {
-            --primary-color: #1E3A8A;
-            --accent-color: #3B82F6;
-            --background-color: #F3F4F6;
-            --card-bg: #FFFFFF;
-            --highlight-color: #FBBF24;
-            --text-primary: #111827;
-            --text-secondary: #6B7280;
-        }
-  …
-[10:47 pm, 28/10/2025] Kiruthika: home.html
-[10:47 pm, 28/10/2025] Kiruthika: Ella code uh irruku vera ena venu
-[10:47 pm, 28/10/2025] 6 AMAL AARON S: ithu pothu
-[10:47 pm, 28/10/2025] Kiruthika: Mm
-[10:49 pm, 28/10/2025] 6 AMAL AARON S: Map code
-[10:49 pm, 28/10/2025] 6 AMAL AARON S: Send pannu
-[10:49 pm, 28/10/2025] Kiruthika: <!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -37,7 +8,7 @@
     <!-- Load Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Load Font Awesome for Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">}
     
     <style>
         :root {
@@ -302,12 +273,12 @@
                 const pointerY = weightedMockY / totalWeight;
                 const distanceString = closestDist.toFixed(3) + " km";
                 
-                if (closestLandmark) closestLandmark.textContent = You are closest to: ${closestName};
-                if (distanceInfo) distanceInfo.textContent = Current distance to this landmark is approximately ${distanceString}.;
+                if (closestLandmark) closestLandmark.textContent = 'You are closest to: ${closestName}';
+                if (distanceInfo) distanceInfo.textContent = 'Current distance to this landmark is approximately ${distanceString}.';
 
                 if (userPointer) {
-                    userPointer.style.left = ${pointerX}%;
-                    userPointer.style.top = ${pointerY}%;
+                    userPointer.style.left = '${pointerX}%';
+                    userPointer.style.top = '${pointerY}%';
                     userPointer.classList.remove('hidden'); 
                 }
 
@@ -329,7 +300,7 @@
 
             // Geolocation error callback
             function error(err) {
-                console.warn(ERROR(${err.code}): ${err.message});
+                console.warn('ERROR(${err.code}): ${err.message}');
                 window.stopTracking();
 
                 // DOM elements must be selected as they are only present in the map view
@@ -347,7 +318,7 @@
                     } else if (err.code === 2) {
                         errorMessage = "Position Unavailable: GPS signal lost or weak.";
                     }
-                    statusMessage.textContent = Error: ${errorMessage}. Please restart tracking.;
+                    statusMessage.textContent = 'Error: ${errorMessage}. Please restart tracking.';
                 }
                 if (closestLandmark) closestLandmark.textContent = "Navigation Failed";
                 if (distanceInfo) distanceInfo.textContent = "Cannot calculate proximity without location data.";

@@ -9,4 +9,4 @@ app.get("/", (req, res) => res.sendFile(path.join(__dirname, "index.html")));
 app.get("/home.html", (req, res) => res.sendFile(path.join(__dirname, "home.html")));
 app.get("/profile.html", (req, res) => res.sendFile(path.join(__dirname, "profile.html")));
 
-app.listen(PORT, () => console.log(Server running at http://localhost:${PORT}));
+app.listen(PORT, () => console.log('Server running at http://localhost:${PORT}'));
