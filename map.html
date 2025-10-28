@@ -1,129 +1,95 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <title>SJCE — Interactive Campus Map (Leaflet)</title>
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>St. Joseph's College of Engineering — Map</title>
+
   <!-- Leaflet CSS -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-    integrity="sha256-sA+4f2vCkq6w9g3v6U5Q0T9p1q3uDk2F8g1Y0gQmRz0=" crossorigin=""/>
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha512-sA+e2R0u3R3EugYJzTVdfcZ5s7D7tYFz7kK8D6VxSmzqN5KZJ9vQYMcR6qH3XhSMLQj1R0zEJ5N3SwLJpBz6hQ=="
+    crossorigin=""
+  />
+
   <style>
-    html,body,#map { height: 100%; margin: 0; padding: 0; }
-    #map { min-height: 700px; }
-    .legend { background: white; padding: 8px; border-radius:6px; box-shadow:0 2px 6px rgba(0,0,0,0.12);}
-    .topbar { position: absolute; left: 12px; top: 12px; z-index: 1000; }
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      background: #f8f9fa;
+    }
+
+    h2 {
+      text-align: center;
+      margin: 10px;
+    }
+
+    p {
+      text-align: center;
+      margin-top: -5px;
+    }
+
+    /* Make the map fill the entire remaining screen */
+    #map {
+      height: 90vh;
+      width: 100%;
+    }
   </style>
 </head>
 <body>
-  <div class="topbar">
-    <div class="legend">
-      <strong>St. Joseph's College of Engineering — Interactive Map</strong><br>
-      Click markers for details. Click anywhere on the map to add a marker.
-    </div>
-  </div>
+  <h2>St. Joseph's College of Engineering — Interactive Map</h2>
+  <p>Click markers for details. Click anywhere on the map to add a marker.</p>
+
   <div id="map"></div>
 
   <!-- Leaflet JS -->
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-    integrity="sha256-o9N1jz6b1g5n9RtmK2u3z3K3wJYv4YF9G+3Y3J+3h28=" crossorigin=""></script>
-
-  <!-- (Optional) Leaflet Search plugin (cdn) -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
-  <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+  <script
+    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha512-sA+6lL6RZB8qQ6m+eTBO8+ok5cHW0zCGsQZQbqZddx5p1+bN8jzSnlbtk4fyLPLgDCQ7O8j78yRrjzQhEKD2wQ=="
+    crossorigin=""
+  ></script>
 
   <script>
-    // --- Center coordinates (approximate campus center) ---
-    // Source: map data / public sources for St Joseph's College of Engineering, Chennai.
-    // You can update this to a more precise coordinate if you have it.
-    const campusCenter = [12.86913, 80.21484]; // lat, lon (approx)
+    // Initialize the map centered on St. Joseph's College of Engineering, Chennai
+    const map = L.map('map').setView([12.8696, 80.2211], 17);
 
-    // Create map
-    const map = L.map('map', { center: campusCenter, zoom: 17 });
-
-    // OSM tile layer
+    // Add OpenStreetMap tiles
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      maxZoom: 20,
-      attribution: '&copy; OpenStreetMap contributors'
+      maxZoom: 19,
+      attribution: '&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors'
     }).addTo(map);
 
-    // Marker icon presets (simple)
-    const blueIcon = new L.Icon.Default();
-
-    // Predefined campus points (approximate). You should refine these with exact coords.
+    // Define main campus buildings
     const campusPoints = [
-      { id:'admin',   name:'Admin Block',           latlng:[12.86945, 80.21410], desc:'Admin / Office' },
-      { id:'library', name:'Library / Main Building',latlng:[12.86900, 80.21510], desc:'Library & Main Building' },
-      { id:'girls',   name:'Girls Hostel',          latlng:[12.86870, 80.21600], desc:'Girls Hostel' },
-      { id:'boys',    name:'Boys Hostel',           latlng:[12.87000, 80.21600], desc:'Boys Hostel / G9,G10' },
-      { id:'exam',    name:'Exam Hall Block',       latlng:[12.86860, 80.21440], desc:'Exam Hall' },
-      { id:'bus',     name:'Bus Stop',              latlng:[12.86790, 80.21435], desc:'Main Bus Stop' },
-      { id:'football',name:'Football Ground',       latlng:[12.87100, 80.21500], desc:'Football Ground' },
-      { id:'indoor',  name:'Indoor Auditorium',     latlng:[12.86960, 80.21465], desc:'Indoor Auditorium' },
-      { id:'outdoor', name:'Outdoor Auditorium',    latlng:[12.86940, 80.21495], desc:'Outdoor Auditorium' },
-      { id:'clb1',    name:'CLB / Lab Block 1',     latlng:[12.86910, 80.21380], desc:'Labs / Classrooms' },
-      { id:'stadium', name:'Open Stadium / Water',  latlng:[12.86895, 80.21490], desc:'Open stadium / water tank' },
-      { id:'chapel',  name:'Chapel',                latlng:[12.86790, 80.21620], desc:'Chapel' }
+      { name: "Admin Block", coords: [12.8699, 80.2205] },
+      { name: "Indoor Auditorium", coords: [12.8692, 80.2209] },
+      { name: "Outdoor Auditorium", coords: [12.8694, 80.2213] },
+      { name: "Library", coords: [12.8688, 80.2217] },
+      { name: "Girls Hostel", coords: [12.8684, 80.2222] },
+      { name: "Boys Hostel", coords: [12.8706, 80.2200] },
+      { name: "Football Ground", coords: [12.8710, 80.2218] },
+      { name: "Exam Hall Block", coords: [12.8682, 80.2206] },
+      { name: "Chapel", coords: [12.8680, 80.2204] },
+      { name: "Canteen", coords: [12.8696, 80.2215] },
     ];
 
-    // Add markers and a LayerGroup
-    const markersLayer = L.layerGroup().addTo(map);
-    const markersById = {};
-
-    campusPoints.forEach(pt => {
-      const m = L.marker(pt.latlng, { title: pt.name }).addTo(markersLayer);
-      m.bindPopup(`<b>${pt.name}</b><br>${pt.desc}<br><small>ID: ${pt.id}</small>`);
-      markersById[pt.id] = m;
+    // Add markers for each building
+    campusPoints.forEach(point => {
+      L.marker(point.coords)
+        .addTo(map)
+        .bindPopup(`<b>${point.name}</b>`);
     });
 
-    // Add a scale control
-    L.control.scale().addTo(map);
-
-    // Add a simple geocoder/search control (uses open Nominatim by plugin)
-    if (L.Control.Geocoder) {
-      L.Control.geocoder({ defaultMarkGeocode: false })
-        .on('markgeocode', function(e) {
-          const bbox = e.geocode.bbox;
-          map.fitBounds([[bbox.getSouthEast().lat, bbox.getSouthEast().lng],[bbox.getNorthWest().lat, bbox.getNorthWest().lng]]);
-        })
-        .addTo(map);
-    }
-
-    // Clicking on map adds a persistent marker and popup
-    map.on('click', function(e) {
-      const latlng = e.latlng;
-      const marker = L.marker(latlng).addTo(map);
-      marker.bindPopup(`<b>Custom marker</b><br>Lat: ${latlng.lat.toFixed(6)}<br>Lng: ${latlng.lng.toFixed(6)}<br><button onclick="alert('You can script routing here.')">Route to here</button>`);
-      marker.openPopup();
+    // Allow users to add their own temporary markers by clicking on the map
+    map.on('click', function (e) {
+      const { lat, lng } = e.latlng;
+      L.marker([lat, lng])
+        .addTo(map)
+        .bindPopup(`Custom Marker<br>Lat: ${lat.toFixed(5)}, Lng: ${lng.toFixed(5)}`)
+        .openPopup();
     });
-
-    // Example: function to zoom to a building by id
-    function zoomToBuilding(id) {
-      const m = markersById[id];
-      if (m) {
-        map.setView(m.getLatLng(), 19);
-        m.openPopup();
-      } else {
-        alert('Building ID not found: ' + id);
-      }
-    }
-
-    // Expose helper to global for convenience in console/testing
-    window.zoomToBuilding = zoomToBuilding;
-
-    // OPTIONAL: add your SVG as an image overlay aligned on the campus.
-    // To do that properly you need the bounding box (southWest, northEast) of the SVG, e.g.:
-    // const imageUrl = 'campus_map_simplified.svg';
-    // const imageBounds = [[12.8678, 80.2128], [12.8718, 80.2178]]; // replace with correct bounds (latLng pairs)
-    // const svgOverlay = L.imageOverlay(imageUrl, imageBounds).addTo(map);
-    // svgOverlay.setOpacity(0.85);
-    //
-    // If you want I can help georeference the SVG: tell me three known control points (pixel coords + latlng) or I can propose a bounding box.
-
-    // ROUTING (next step)
-    // To add turn-by-turn on-campus routing, integrate Leaflet Routing Machine or call an OSRM/GraphHopper instance.
-    // Example (needs leaflet-routing-machine and a routing backend):
-    // L.Routing.control({ waypoints: [L.latLng(...), L.latLng(...)] }).addTo(map);
-
   </script>
 </body>
 </html>
