@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notifications Hub</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Load Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary-color: #1E3A8A;
+            --accent-color: #3B82F6;
+            --background-color: #F3F4F6;
+            --card-bg: #FFFFFF;
+            --highlight-color: #FBBF24;
+            --text-primary: #111827;
+            --text-secondary: #6B7280;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--background-color);
+            display: flex;
+            justify-content: center;
+            align-items: flex-start; 
+            min-height: 100vh;
+            padding: 0;
+        }
+
+        /* Mobile Container for Fixed Layout */
+        .mobile-container {
+            width: 100%;
+            max-width: 500px; 
+            background: var(--card-bg);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            padding-bottom: 70px; 
+            position: relative;
+        }
+
+        header {
+            background-color: var(--primary-color);
+            color: #fff;
+            padding: 1rem;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            flex-shrink: 0;
+        }
+        header h1 { font-size: 1.5rem; font-weight: 700; }
+        header p { font-size: 0.875rem; opacity: 0.9; }
+
+        /* Dynamic Content Area */
+        #content-area {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 1.5rem;
+            max-width: none; 
+            width: 100%;
+        }
+
+        /* --- BOTTOM NAVIGATION STYLES --- */
+        nav {
+            position: fixed; 
+            bottom: 0;
+            left: 0;
+            right: 0;
+            max-width: 500px; 
+            margin: 0 auto;
+            background: var(--card-bg); 
+            border-top: 1px solid #e5e7eb; 
+            display: flex;
+            justify-content: space-around; 
+            padding: 8px 0; 
+            box-shadow: 0 -4px 15px rgba(0,0,0,0.15);
+            z-index: 1000; 
+        }
+        .nav-item {
+            display: flex; flex-direction: column; align-items: center; gap: 3px; cursor: pointer;
+            padding: 8px 15px; color: var(--text-secondary); transition: all 0.2s ease; font-size: 11px; position: relative;
+        }
+        .nav-item i {
+            font-size: 22px; color: var(--text-secondary); transition: all 0.2s ease;
+        }
+        
+        /* ACTIVE STATE: Notifications is active for this page */
+        .nav-item#nav-notifications { 
+            color: var(--primary-color) !important; 
+            transform: scale(1.05);
+        }
+        .nav-item:hover i, .nav-item:hover {
+            color: var(--accent-color);
+        }
+        .badge {
+            background-color: #EF4444; 
+            color: #fff; border-radius: 50%;
+            width: 18px; height: 18px; display: flex; align-items: center; justify-content: center;
+            font-size: 10px; font-weight: 600; position: absolute; top: 0px; right: 5px;
+        }
+
+        /* Notification Card Styles */
+        .notification-card {
+            background-color: #F9FAFB;
+            border-left: 4px solid var(--accent-color);
+            transition: all 0.3s ease;
+        }
+        .notification-card:hover {
+            background-color: #E5E7EB;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="mobile-container">
+        
+        <header>
+            <h1 id="app-title">Notifications</h1>
+            <p id="header-subtitle">Your latest alerts and updates</p>
+        </header>
+
+        <!-- Notification Content Area -->
+        <div id="content-area">
+            <div class="space-y-4">
+                <h2 class="text-xl font-bold text-gray-800 mb-6">Recent Alerts (2)</h2>
+                
+                <!-- Hackathon Notification -->
+                <div class="notification-card p-4 rounded-lg shadow-md flex items-start gap-4 cursor-pointer">
+                    <i class="fas fa-laptop-code text-2xl text-blue-600 mt-1 flex-shrink-0"></i>
+                    <div>
+                        <h3 class="font-semibold text-gray-900">Hackathon Notification</h3>
+                        <p class="text-sm text-gray-700 mt-1">
+                            The annual Campus Code-Sprint Hackathon registration is now open! Form your teams and sign up before Friday.
+                        </p>
+                        <p class="text-xs text-gray-500 mt-2">1 hour ago</p>
+                    </div>
+                </div>
+
+                <!-- Sport Alert -->
+                <div class="notification-card p-4 rounded-lg shadow-md flex items-start gap-4 cursor-pointer" style="border-left-color: #EF4444;">
+                    <i class="fas fa-basketball-ball text-2xl text-red-600 mt-1 flex-shrink-0"></i>
+                    <div>
+                        <h3 class="font-semibold text-gray-900">Sport Alert: Championship Game</h3>
+                        <p class="text-sm text-gray-700 mt-1">
+                            The Varsity Soccer Championship game has been moved to the main stadium turf field at 7:00 PM tonight due to weather.
+                        </p>
+                        <p class="text-xs text-gray-500 mt-2">5 hours ago</p>
+                    </div>
+                </div>
+
+                <!-- Placeholder for more alerts -->
+                <p class="text-center text-sm text-gray-500 pt-8">
+                    No older notifications. You're all caught up!
+                </p>
+            </div>
+        </div>
+
+        <!-- The Fixed Bottom Navigation Bar -->
+        <nav>
+            <!-- Links to external files (will error here) -->
+            <div class="nav-item" id="nav-home" onclick="location.href='home.html'">
+                <i class="fas fa-home"></i>
+                <span>Home</span>
+            </div>
+             
+            <!-- Campus Map reloads index.html -->
+            <div class="nav-item" id="nav-map" onclick="location.href='index.html'">
+                <i class="fas fa-map-location-dot"></i>
+                <span>Campus Map</span>
+            </div>
+            
+            <!-- This item is active on this page -->
+            <div class="nav-item" id="nav-notifications" onclick="location.href='notifications.html'">
+                <i class="fas fa-bell"></i>
+                <span>Notifications</span>
+                <div class="badge">2</div>
+            </div>
+            
+            <!-- Links to external files (will error here) -->
+            <div class="nav-item" id="nav-profile" onclick="location.href='profile.html'">
+                <i class="fas fa-user"></i>
+                <span>Profile</span>
+            </div>
+        </nav>
+    </div>
+</body>
+</html>

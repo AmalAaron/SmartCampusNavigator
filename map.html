@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campus Navigation Hub</title>
+    
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --primary-color: #1E3A8A;
+            --accent-color: #3B82F6;
+            --background-color: #F3F4F6;
+            --card-bg: #FFFFFF;
+            --highlight-color: #FBBF24;
+            --text-primary: #111827;
+            --text-secondary: #6B7280;
+        }
+  …
+[10:47 pm, 28/10/2025] Kiruthika: home.html
+[10:47 pm, 28/10/2025] Kiruthika: Ella code uh irruku vera ena venu
+[10:47 pm, 28/10/2025] 6 AMAL AARON S: ithu pothu
+[10:47 pm, 28/10/2025] Kiruthika: Mm
+[10:49 pm, 28/10/2025] 6 AMAL AARON S: Map code
+[10:49 pm, 28/10/2025] 6 AMAL AARON S: Send pannu
+[10:49 pm, 28/10/2025] Kiruthika: <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Map Geolocation Navigator</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Load Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary-color: #1E3A8A;
+            --accent-color: #3B82F6;
+            --background-color: #F3F4F6;
+            --card-bg: #FFFFFF;
+            --highlight-color: #FBBF24;
+            --text-primary: #111827;
+            --text-secondary: #6B7280;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--background-color);
+            display: flex;
+            justify-content: center;
+            align-items: flex-start; /* Align to top */
+            min-height: 100vh;
+            padding: 0;
+        }
+
+        /* Mobile Container for Fixed Layout */
+        .mobile-container {
+            width: 100%;
+            max-width: 500px; /* Max width for mobile view */
+            background: var(--card-bg);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            /* Important: Add padding for the fixed bottom navigation */
+            padding-bottom: 70px; 
+            position: relative;
+        }
+
+        header {
+            background-color: var(--primary-color);
+            color: #fff;
+            padding: 1rem;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            flex-shrink: 0;
+        }
+        header h1 { font-size: 1.5rem; font-weight: 700; }
+        header p { font-size: 0.875rem; opacity: 0.9; }
+
+        /* Dynamic Content Area */
+        #content-area {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 1.5rem;
+            max-width: none; 
+            width: 100%;
+        }
+
+        /* --- BOTTOM NAVIGATION STYLES --- */
+        nav {
+            position: fixed; 
+            bottom: 0;
+            left: 0;
+            right: 0;
+            max-width: 500px; 
+            margin: 0 auto;
+            background: var(--card-bg); 
+            border-top: 1px solid #e5e7eb; 
+            display: flex;
+            justify-content: space-around; 
+            padding: 8px 0; 
+            box-shadow: 0 -4px 15px rgba(0,0,0,0.15);
+            z-index: 1000; 
+        }
+        .nav-item {
+            display: flex; flex-direction: column; align-items: center; gap: 3px; cursor: pointer;
+            padding: 8px 15px; color: var(--text-secondary); transition: all 0.2s ease; font-size: 11px; position: relative;
+        }
+        .nav-item i {
+            font-size: 22px; color: var(--text-secondary); transition: all 0.2s ease;
+        }
+        /* Since we are using location.href, we can't manage active state dynamically, 
+           but we set the initial active class on the Map button for styling */
+        .nav-item#nav-map { 
+            color: var(--primary-color) !important; 
+            transform: scale(1.05);
+        }
+        .nav-item:hover i, .nav-item:hover {
+            color: var(--accent-color);
+        }
+        .badge {
+            background-color: #EF4444; 
+            color: #fff; border-radius: 50%;
+            width: 18px; height: 18px; display: flex; align-items: center; justify-content: center;
+            font-size: 10px; font-weight: 600; position: absolute; top: 0px; right: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="mobile-container">
+        
+        <header>
+            <h1 id="app-title">Campus Geolocation Hub</h1>
+            <p id="header-subtitle">Live Location Tracking & Navigation</p>
+        </header>
+
+        <!-- Dynamic Content Area - Starts with the Map Console -->
+        <div id="content-area">
+            <div id="map-console" class="w-full bg-white rounded-xl">
+                <div class="grid grid-cols-1 gap-8">
+                    
+                    <!-- Map Visualization -->
+                    <div class="space-y-4">
+                        <h2 class="text-xl font-semibold text-gray-800">Target Map</h2>
+                        <div class="relative border-4 border-dashed border-gray-200 rounded-lg overflow-hidden">
+                            <!-- The map image from your upload is included here for visual context -->
+                            <img id="mapImage" src="egmap.jpg" alt="Simulated Town Map with School, Church, and House" class="w-full h-auto object-cover rounded-md" onerror="this.onerror=null; this.src='https://placehold.co/600x400/38bdf8/ffffff?text=Map+Image+Unavailable'">
+                            
+                            <!-- The User Location Pointer -->
+                            <div id="userPointer" 
+                                class="absolute h-4 w-4 bg-red-600 rounded-full border-2 border-white shadow-xl z-10 hidden" 
+                                style="transform: translate(-50%, -50%);">
+                            </div>
+                        </div>
+                        <p class="text-sm text-gray-500">
+                            The navigation below is based on static coordinates assigned to the features on this map image. The red dot shows your **simulated* position.
+                        </p>
+                    </div>
+
+                    <!-- Geolocation & Status Display -->
+                    <div class="space-y-6">
+                        <h2 class="text-xl font-semibold text-gray-800">Your Real-Time Location</h2>
+                        
+                        <div id="statusMessage" class="p-3 bg-blue-100 border border-blue-300 text-blue-800 rounded-lg text-sm font-medium">
+                            Waiting for location access...
+                        </div>
+
+                        <div class="bg-gray-50 p-4 rounded-xl space-y-2 shadow-inner">
+                            <p class="text-gray-600 font-medium">
+                                Latitude: <span id="latDisplay" class="font-mono text-gray-900 ml-2">--</span>
+                            </p>
+                            <p class="text-gray-600 font-medium">
+                                Longitude: <span id="lonDisplay" class="font-mono text-gray-900 ml-2">--</span>
+                            </p>
+                        </div>
+                        
+                        <h2 class="text-xl font-semibold text-gray-800 pt-4">Navigation Status</h2>
+
+                        <div id="navigationResult" class="p-6 bg-indigo-50 border-l-4 border-indigo-500 rounded-lg shadow-md space-y-3">
+                            <p id="closestLandmark" class="text-xl font-bold text-indigo-700">Determining closest landmark...</p>
+                            <p id="distanceInfo" class="text-sm text-gray-600">Distance information will appear here.</p>
+                        </div>
+
+                        <button id="refreshButton" class="w-full py-3 mt-4 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-lg transition duration-150 shadow-lg" onclick="getAndNavigate()">
+                            Restart Tracking
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- The Fixed Bottom Navigation Bar (Now using external links) -->
+        <nav>
+            <!-- Links to external files, expecting an error if files are missing -->
+            <div class="nav-item" id="nav-home" onclick="location.href='home.html'">
+                <i class="fas fa-home"></i>
+                <span>Home</span>
+            </div>
+             
+            <!-- Campus Map reloads this single index.html file -->
+            <div class="nav-item active" id="nav-map" onclick="location.href='map.html'">
+                <i class="fas fa-map-location-dot"></i>
+                <span>Campus Map</span>
+            </div>
+            
+            <div class="nav-item" id="nav-notifications" onclick="location.href='notifications.html'">
+                <i class="fas fa-bell"></i>
+                <span>Notifications</span>
+                <div class="badge">2</div>
+            </div>
+            
+            <div class="nav-item" id="nav-profile" onclick="location.href='profile.html'">
+                <i class="fas fa-user"></i>
+                <span>Profile</span>
+            </div>
+        </nav>
+    </div>
+
+    <script>
+        // IIFE to encapsulate variables
+        (() => {
+            // --- GLOBAL STATE & CONSTANTS ---
+            
+            const R = 6371; // Radius of Earth in km
+            let watchID = null; // ID for the continuous geolocation watch
+            
+            // Mock Landmarks (Original data)
+            const landmarks = [
+                { name: "The Main SCHOOL (Top Left)", lat: 37.7749, lon: -122.4194, mockX: 20, mockY: 20 },
+                { name: "The CHURCH (Top Right)", lat: 37.7899, lon: -122.3944, mockX: 80, mockY: 20 },
+                { name: "The PRIVATE HOUSE (Bottom Center)", lat: 37.7449, lon: -122.4544, mockX: 50, mockY: 80 }
+            ];
+
+            // Helper function for Haversine distance calculation
+            function calculateDistance(lat1, lon1, lat2, lon2) {
+                const degToRad = (deg) => deg * (Math.PI / 180);
+                const dLat = degToRad(lat2 - lat1);
+                const dLon = degToRad(lon2 - lon1);
+                const a = 
+                    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                    Math.cos(degToRad(lat1)) * Math.cos(degToRad(lat2)) *
+                    Math.sin(dLon / 2) * Math.sin(dLon / 2);
+                const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+                return R * c; 
+            }
+
+            // Function to stop the geolocation tracking (Used internally on error/refresh)
+            window.stopTracking = function() {
+                if (watchID !== null) {
+                    navigator.geolocation.clearWatch(watchID);
+                    watchID = null;
+                    console.log("Geolocation tracking stopped.");
+                }
+            }
+
+            // Core navigation logic (Called on successful geolocation update)
+            function navigate(userLat, userLon) {
+                // DOM elements must be selected as they are only present in the map view
+                const latDisplay = document.getElementById('latDisplay');
+                const lonDisplay = document.getElementById('lonDisplay');
+                const closestLandmark = document.getElementById('closestLandmark');
+                const distanceInfo = document.getElementById('distanceInfo');
+                const navigationResult = document.getElementById('navigationResult');
+                const userPointer = document.getElementById('userPointer');
+                const statusMessage = document.getElementById('statusMessage');
+
+                if (latDisplay && lonDisplay) {
+                    latDisplay.textContent = userLat.toFixed(7);
+                    lonDisplay.textContent = userLon.toFixed(7);
+                }
+
+                let closestDist = Infinity;
+                let closestName = "N/A";
+                let totalWeight = 0;
+                let weightedMockX = 0;
+                let weightedMockY = 0;
+
+                landmarks.forEach(landmark => {
+                    const distance = calculateDistance(userLat, userLon, landmark.lat, landmark.lon);
+                    const weight = 1 / (distance + 0.001); 
+
+                    weightedMockX += landmark.mockX * weight;
+                    weightedMockY += landmark.mockY * weight;
+                    totalWeight += weight;
+                    
+                    if (distance < closestDist) {
+                        closestDist = distance;
+                        closestName = landmark.name;
+                    }
+                });
+                
+                const pointerX = weightedMockX / totalWeight;
+                const pointerY = weightedMockY / totalWeight;
+                const distanceString = closestDist.toFixed(3) + " km";
+                
+                if (closestLandmark) closestLandmark.textContent = You are closest to: ${closestName};
+                if (distanceInfo) distanceInfo.textContent = Current distance to this landmark is approximately ${distanceString}.;
+
+                if (userPointer) {
+                    userPointer.style.left = ${pointerX}%;
+                    userPointer.style.top = ${pointerY}%;
+                    userPointer.classList.remove('hidden'); 
+                }
+
+                if (statusMessage) {
+                    statusMessage.className = 'p-3 bg-green-100 border border-green-300 text-green-800 rounded-lg text-sm font-medium';
+                    statusMessage.textContent = 'Live location tracking active.';
+                }
+                if (navigationResult) {
+                    navigationResult.classList.remove('border-indigo-500', 'bg-indigo-50', 'border-red-500', 'bg-red-50');
+                    navigationResult.classList.add('border-green-500', 'bg-green-50');
+                }
+            }
+
+            // Geolocation success callback
+            function success(pos) {
+                // Since there is no internal routing, we always navigate here
+                navigate(pos.coords.latitude, pos.coords.longitude);
+            }
+
+            // Geolocation error callback
+            function error(err) {
+                console.warn(ERROR(${err.code}): ${err.message});
+                window.stopTracking();
+
+                // DOM elements must be selected as they are only present in the map view
+                const statusMessage = document.getElementById('statusMessage');
+                const closestLandmark = document.getElementById('closestLandmark');
+                const distanceInfo = document.getElementById('distanceInfo');
+                const navigationResult = document.getElementById('navigationResult');
+                const userPointer = document.getElementById('userPointer');
+
+                if (statusMessage) {
+                    statusMessage.className = 'p-3 bg-red-100 border border-red-300 text-red-800 rounded-lg text-sm font-medium';
+                    let errorMessage = "Could not get location.";
+                    if (err.code === 1) {
+                        errorMessage = "Access Denied: Please enable location services for this site.";
+                    } else if (err.code === 2) {
+                        errorMessage = "Position Unavailable: GPS signal lost or weak.";
+                    }
+                    statusMessage.textContent = Error: ${errorMessage}. Please restart tracking.;
+                }
+                if (closestLandmark) closestLandmark.textContent = "Navigation Failed";
+                if (distanceInfo) distanceInfo.textContent = "Cannot calculate proximity without location data.";
+                
+                if (navigationResult) {
+                    navigationResult.classList.remove('border-indigo-500', 'bg-indigo-50', 'border-green-500', 'bg-green-50');
+                    navigationResult.classList.add('border-red-500', 'bg-red-50');
+                }
+                if (userPointer) userPointer.classList.add('hidden'); 
+            }
+
+            // Main function to get location and start continuous tracking
+            window.getAndNavigate = function() {
+                // Clear any existing watch to prevent duplicates
+                window.stopTracking(); 
+
+                const statusMessage = document.getElementById('statusMessage');
+                if (statusMessage) {
+                    statusMessage.className = 'p-3 bg-blue-100 border border-blue-300 text-blue-800 rounded-lg text-sm font-medium';
+                    statusMessage.textContent = 'Attempting to track your live location...';
+                }
+                
+                const options = {
+                    enableHighAccuracy: true,
+                    timeout: 10000, 
+                    maximumAge: 0 
+                };
+
+                if (navigator.geolocation) {
+                    // Start continuous position tracking
+                    watchID = navigator.geolocation.watchPosition(success, error, options);
+                } else {
+                    if (statusMessage) {
+                        statusMessage.className = 'p-3 bg-red-100 border border-red-300 text-red-800 rounded-lg text-sm font-medium';
+                        statusMessage.textContent = 'Error: Geolocation is not supported by this browser.';
+                    }
+                }
+            }
+
+            // Initialize the app by starting location tracking
+            window.onload = window.getAndNavigate;
+
+        })();
+    </script>
+</body>
+</html>
