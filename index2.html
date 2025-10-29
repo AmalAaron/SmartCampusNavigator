@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+  <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -57,7 +57,7 @@
       }
     }
 
-    input[type="text"], input[type="number"] {
+    input[type="text"] {
       padding: 10px;
       margin: 10px;
       width: 250px;
@@ -84,28 +84,35 @@
 <!-- Form content -->
 <div id="formContainer">
   <h2>Enter Your Details</h2>
-  <form id="indexForm">
-    <input type="text" name="name" placeholder="Your Name" required><br>
-    <input type="text" name="college" placeholder="Your College" required><br>
-    <input type="number" name="year" placeholder="Your Year" required><br>
-    <input type="submit" value="Submit">
-  </form>
-</div>
+  <form  id="indexForm">
+  <input type="text" name="name" placeholder="Your Name" required><br>
+  <input type="text" name="college" placeholder="Your College" required><br>
+  <input type="number" name="year" placeholder="Your Year" required><br>
+  <input type="submit" value="Submit">
+</form>
+
+  
+
 
 <!-- Script to switch from splash to form -->
 <script>
+  // Wait for splash to fade out, then show form
   setTimeout(() => {
     document.getElementById('splash').style.display = 'none';
     document.getElementById('formContainer').style.display = 'block';
-  }, 3000);
+  }, 3000); // 3 seconds total splash time
 
-  const form = document.getElementById('indexForm');
+const form = document.getElementById('indexForm');
 
   form.addEventListener('submit', (e) => {
-    e.preventDefault();
+    e.preventDefault(); // prevent default form submit
+
+    // Save data to localStorage
     localStorage.setItem('name', form.name.value);
     localStorage.setItem('college', form.college.value);
     localStorage.setItem('year', form.year.value);
+
+    // Redirect to home.html
     window.location.href = 'home.html';
   });
 </script>
