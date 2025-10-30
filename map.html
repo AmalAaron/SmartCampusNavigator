@@ -1,367 +1,1527 @@
-
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Map Geolocation Navigator</title>
-    <!-- Load Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Load Font Awesome for Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">}
-    
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Campus Navigator</title>
     <style>
-        :root {
-            --primary-color: #1E3A8A;
-            --accent-color: #3B82F6;
-            --background-color: #F3F4F6;
-            --card-bg: #FFFFFF;
-            --highlight-color: #FBBF24;
-            --text-primary: #111827;
-            --text-secondary: #6B7280;
-        }
-        
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--background-color);
-            display: flex;
-            justify-content: center;
-            align-items: flex-start; /* Align to top */
-            min-height: 100vh;
+        * {
+            margin: 0;
             padding: 0;
+            box-sizing: border-box;
         }
 
-        /* Mobile Container for Fixed Layout */
-        .mobile-container {
-            width: 100%;
-            max-width: 500px; /* Max width for mobile view */
-            background: var(--card-bg);
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #e8f5e9 0%, #e3f2fd 100%);
             min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            padding: 30px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #1a237e;
+            margin-bottom: 10px;
+            font-size: 2.5rem;
+        }
+
+        h2 {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .controls {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr auto auto; 
+            gap: 20px;
+            margin-bottom: 30px;
+            align-items: end;
+        }
+
+        .voice-controls {
+            grid-column: 1 / -1; 
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            justify-content: space-between;
+            padding-top: 10px;
+            border-top: 1px solid #eee;
+        }
+        
+        .voice-controls .control-group {
+            flex-grow: 1;
+        }
+        
+        #voiceInputBtn {
+            background: #2196f3;
+            color: white;
+            flex-shrink: 0;
+            width: 200px;
+        }
+        
+        #voiceInputBtn:hover {
+            background: #1976d2;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(33, 150, 243, 0.4);
+        }
+
+        @media (max-width: 1024px) {
+            .controls {
+                grid-template-columns: 1fr 1fr;
+            }
+            .button-group {
+                grid-column: 1 / 2; 
+            }
+            #trackLocationBtn {
+                grid-column: 2 / 3;
+            }
+            .voice-controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            #voiceInputBtn {
+                width: 100%;
+            }
+        }
+
+        .control-group {
             display: flex;
             flex-direction: column;
-            box-shadow: 0 0 20px rgba(0,0,0,0.1);
-            /* Important: Add padding for the fixed bottom navigation */
-            padding-bottom: 70px; 
+        }
+
+        label {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #333;
+            font-size: 14px;
+        }
+
+        select {
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        select:focus {
+            outline: none;
+            border-color: #4caf50;
+            box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-navigate {
+            background: #4caf50;
+            color: white;
+            flex: 1;
+        }
+
+        .btn-navigate:hover:not(:disabled) {
+            background: #388e3c;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(76, 175, 80, 0.4);
+        }
+
+        .btn-navigate:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .btn-clear {
+            background: #f44336;
+            color: white;
+            padding: 12px;
+        }
+
+        .btn-clear:hover {
+            background: #d32f2f;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(244, 67, 54, 0.4);
+        }
+
+        .path-info {
+            background: #e8f5e9;
+            border: 2px solid #4caf50;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .path-info.active {
+            display: block;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .path-info h3 {
+            color: #2e7d32;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .path-info p {
+            color: #333;
+            margin: 8px 0;
+            font-size: 15px;
+        }
+        
+        #stepsList {
+            list-style: none;
+            padding-left: 0;
+        }
+        
+        #stepsList li {
+            margin-bottom: 8px;
+            border-left: 3px solid #4caf50;
+            padding-left: 10px;
+            font-size: 15px;
+        }
+
+        .map-container {
+            background: #c8d5b9;
+            border: 4px solid #8fa973;
+            border-radius: 12px;
+            padding: 20px;
             position: relative;
         }
 
-        header {
-            background-color: var(--primary-color);
-            color: #fff;
-            padding: 1rem;
-            text-align: center;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            flex-shrink: 0;
-        }
-        header h1 { font-size: 1.5rem; font-weight: 700; }
-        header p { font-size: 0.875rem; opacity: 0.9; }
-
-        /* Dynamic Content Area */
-        #content-area {
-            flex-grow: 1;
-            overflow-y: auto;
-            padding: 1.5rem;
-            max-width: none; 
+        svg {
             width: 100%;
+            height: auto;
+            display: block;
         }
 
-        /* --- BOTTOM NAVIGATION STYLES --- */
-        nav {
-            position: fixed; 
-            bottom: 0;
-            left: 0;
-            right: 0;
-            max-width: 500px; 
-            margin: 0 auto;
-            background: var(--card-bg); 
-            border-top: 1px solid #e5e7eb; 
+        .building {
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .building:hover rect {
+            filter: brightness(0.95);
+            stroke-width: 3;
+        }
+
+        .marker {
+            transition: all 0.3s;
+        }
+
+        .marker.pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 0.8;
+            }
+            50% {
+                opacity: 0.3;
+            }
+        }
+
+        .legend {
+            margin-top: 20px;
             display: flex;
-            justify-content: space-around; 
-            padding: 8px 0; 
+            flex-wrap: wrap;
+            gap: 20px;
+            font-size: 14px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .legend-marker {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            border: 2px solid white;
+        }
+
+        .legend-line {
+            width: 30px;
+            height: 3px;
+            background: #f44336;
+        }
+        
+        .user-location-marker {
+            filter: drop-shadow(0 0 8px rgba(156, 39, 176, 0.8));
+            animation: locationPulse 2s infinite;
+        }
+        
+        @keyframes locationPulse {
+            0%, 100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.7;
+                transform: scale(1.2);
+            }
+        }
+        
+        .location-info {
+            background: #f3e5f5;
+            border: 2px solid #9c27b0;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        
+        .location-info.active {
+            display: block;
+            animation: slideIn 0.3s ease;
+        }
+        
+        .location-info p {
+            color: #333;
+            margin: 5px 0;
+            font-size: 14px;
+        }
+        
+        .location-accuracy {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .accuracy-high {
+            background: #c8e6c9;
+            color: #2e7d32;
+        }
+        
+        .accuracy-medium {
+            background: #fff9c4;
+            color: #f57f17;
+        }
+        
+        .accuracy-low {
+            background: #ffcdd2;
+            color: #c62828;
+        }
+        
+        /* Bottom Navigation Styles */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            max-width: 1400px;
+            width: 100%;
+            background: white;
+            border-top: 2px solid #e5e7eb;
+            display: flex;
+            justify-content: space-around;
+            padding: 8px 0;
             box-shadow: 0 -4px 15px rgba(0,0,0,0.15);
-            z-index: 1000; 
+            z-index: 1000;
         }
+        
         .nav-item {
-            display: flex; flex-direction: column; align-items: center; gap: 3px; cursor: pointer;
-            padding: 8px 15px; color: var(--text-secondary); transition: all 0.2s ease; font-size: 11px; position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 3px;
+            cursor: pointer;
+            padding: 8px 15px;
+            color: #6B7280;
+            transition: all 0.2s ease;
+            font-size: 11px;
+            position: relative;
+            flex: 1;
+            max-width: 120px;
         }
+        
         .nav-item i {
-            font-size: 22px; color: var(--text-secondary); transition: all 0.2s ease;
+            font-size: 22px;
+            color: #6B7280;
+            transition: all 0.2s ease;
         }
-        /* Since we are using location.href, we can't manage active state dynamically, 
-           but we set the initial active class on the Map button for styling */
-        .nav-item#nav-map { 
-            color: var(--primary-color) !important; 
+        
+        .nav-item.active {
+            color: #1a237e !important;
             transform: scale(1.05);
         }
-        .nav-item:hover i, .nav-item:hover {
-            color: var(--accent-color);
+        
+        .nav-item.active i {
+            color: #1a237e !important;
         }
-        .badge {
-            background-color: #EF4444; 
-            color: #fff; border-radius: 50%;
-            width: 18px; height: 18px; display: flex; align-items: center; justify-content: center;
-            font-size: 10px; font-weight: 600; position: absolute; top: 0px; right: 5px;
+        
+        .nav-item:hover i,
+        .nav-item:hover {
+            color: #4caf50;
+        }
+        
+        .nav-badge {
+            background-color: #EF4444;
+            color: #fff;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: 600;
+            position: absolute;
+            top: 0px;
+            right: 5px;
+        }
+        
+        /* Add padding to body to prevent content from hiding behind bottom nav */
+        body {
+            padding-bottom: 80px;
+        }
+        
+        @media (max-width: 768px) {
+            .nav-item {
+                padding: 6px 10px;
+                font-size: 10px;
+            }
+            
+            .nav-item i {
+                font-size: 20px;
+            }
         }
     </style>
+    
+    <!-- Load Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
 </head>
 <body>
+    <div class="container">
+        <h1>🎓 Campus Navigator</h1>
+        <h2>📍 Find Your Way Around Campus</h2>
 
-    <div class="mobile-container">
-        
-        <header>
-            <h1 id="app-title">Campus Geolocation Hub</h1>
-            <p id="header-subtitle">Live Location Tracking & Navigation</p>
-        </header>
+        <div class="controls">
+            <div class="control-group">
+                <label for="start">Start Location</label>
+                <select id="start">
+                    <option value="">Select building...</option>
+                </select>
+            </div>
 
-        <!-- Dynamic Content Area - Starts with the Map Console -->
-        <div id="content-area">
-            <div id="map-console" class="w-full bg-white rounded-xl">
-                <div class="grid grid-cols-1 gap-8">
-                    
-                    <!-- Map Visualization -->
-                    <div class="space-y-4">
-                        <h2 class="text-xl font-semibold text-gray-800">Target Map</h2>
-                        <div class="relative border-4 border-dashed border-gray-200 rounded-lg overflow-hidden">
-                            <!-- The map image from your upload is included here for visual context -->
-                            <img id="mapImage" src="egmap.jpg" alt="Simulated Town Map with School, Church, and House" class="w-full h-auto object-cover rounded-md" onerror="this.onerror=null; this.src='https://placehold.co/600x400/38bdf8/ffffff?text=Map+Image+Unavailable'">
-                            
-                            <!-- The User Location Pointer -->
-                            <div id="userPointer" 
-                                class="absolute h-4 w-4 bg-red-600 rounded-full border-2 border-white shadow-xl z-10 hidden" 
-                                style="transform: translate(-50%, -50%);">
-                            </div>
-                        </div>
-                        <p class="text-sm text-gray-500">
-                            The navigation below is based on static coordinates assigned to the features on this map image. The red dot shows your **simulated* position.
-                        </p>
-                    </div>
+            <div class="control-group">
+                <label for="end">Destination</label>
+                <select id="end">
+                    <option value="">Select building...</option>
+                </select>
+            </div>
+            
+            <div class="control-group">
+                <label for="voiceMode">Voice Assistant Mode</label>
+                <select id="voiceMode">
+                    <option value="lenient">Lenient (Turns Only)</option>
+                    <option value="detailed">Detailed (All Steps)</option>
+                    <option value="off">Off</option>
+                </select>
+            </div>
 
-                    <!-- Geolocation & Status Display -->
-                    <div class="space-y-6">
-                        <h2 class="text-xl font-semibold text-gray-800">Your Real-Time Location</h2>
-                        
-                        <div id="statusMessage" class="p-3 bg-blue-100 border border-blue-300 text-blue-800 rounded-lg text-sm font-medium">
-                            Waiting for location access...
-                        </div>
-
-                        <div class="bg-gray-50 p-4 rounded-xl space-y-2 shadow-inner">
-                            <p class="text-gray-600 font-medium">
-                                Latitude: <span id="latDisplay" class="font-mono text-gray-900 ml-2">--</span>
-                            </p>
-                            <p class="text-gray-600 font-medium">
-                                Longitude: <span id="lonDisplay" class="font-mono text-gray-900 ml-2">--</span>
-                            </p>
-                        </div>
-                        
-                        <h2 class="text-xl font-semibold text-gray-800 pt-4">Navigation Status</h2>
-
-                        <div id="navigationResult" class="p-6 bg-indigo-50 border-l-4 border-indigo-500 rounded-lg shadow-md space-y-3">
-                            <p id="closestLandmark" class="text-xl font-bold text-indigo-700">Determining closest landmark...</p>
-                            <p id="distanceInfo" class="text-sm text-gray-600">Distance information will appear here.</p>
-                        </div>
-
-                        <button id="refreshButton" class="w-full py-3 mt-4 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-lg transition duration-150 shadow-lg" onclick="getAndNavigate()">
-                            Restart Tracking
-                        </button>
-                    </div>
-                </div>
+            <div class="button-group">
+                <button class="btn-navigate" id="navigateBtn">Navigate</button>
+                <button class="btn-clear" id="clearBtn">✕</button>
+            </div>
+            
+            <div class="control-group">
+                <label>&nbsp;</label>
+                <button id="trackLocationBtn" style="background: #9c27b0; color: white;">📍 Track My Location</button>
+            </div>
+            
+            <div class="voice-controls">
+                <p style="font-size: 14px; color: #555;">
+                    💡 <strong>Voice Examples:</strong> "Go from Chapel to Masjid" • "Navigate from Bus Stop to Chemistry" • "Boys Hostel to Girls Hostel"
+                </p>
+                <button id="voiceInputBtn">🎙️ Set Destination by Voice</button>
             </div>
         </div>
 
-        <!-- The Fixed Bottom Navigation Bar (Now using external links) -->
-        <nav>
-            <!-- Links to external files, expecting an error if files are missing -->
-            <div class="nav-item" id="nav-home" onclick="location.href='home.html'">
-                <i class="fas fa-home"></i>
-                <span>Home</span>
-            </div>
-             
-            <!-- Campus Map reloads this single index.html file -->
-            <div class="nav-item active" id="nav-map" onclick="location.href='map.html'">
-                <i class="fas fa-map-location-dot"></i>
-                <span>Campus Map</span>
-            </div>
+        <div class="location-info" id="locationInfo">
+            <h3 style="color: #7b1fa2; margin-bottom: 10px;">📍 Live Location Tracking</h3>
+            <p><strong>Status:</strong> <span id="locationStatus">Waiting for GPS...</span></p>
+            <p><strong>Nearest Building:</strong> <span id="nearestBuilding">Calculating...</span></p>
+            <p><strong>Distance:</strong> <span id="distanceToBuilding">-</span></p>
+            <p><strong>Accuracy:</strong> <span id="locationAccuracy" class="location-accuracy">-</span></p>
+            <p style="font-size: 12px; color: #666; margin-top: 10px;">💡 Tip: For best results, enable high-accuracy mode and use outdoors with clear sky view.</p>
+        </div>
+
+        <div class="path-info" id="pathInfo">
+            <h3>🎯 Route Found!</h3>
+            <p><strong>Route Summary:</strong> <span id="pathText"></span></p>
+            <p><strong>Total Distance:</strong> <span id="distanceText"></span></p>
             
-            <div class="nav-item" id="nav-notifications" onclick="location.href='notifications.html'">
-                <i class="fas fa-bell"></i>
-                <span>Notifications</span>
-                <div class="badge">2</div>
+            <h4 style="margin-top: 15px; margin-bottom: 10px;">Step-by-Step Directions:</h4>
+            <ul id="stepsList"></ul>
+        </div>
+
+        <div class="map-container">
+            <svg id="campusMap" viewBox="0 0 1200 1000" preserveAspectRatio="xMidYMid meet">
+                <!-- Main campus area background -->
+                <rect width="1200" height="1000" fill="#b8c9a8"/>
+                
+                <!-- Main pathways (cream colored) -->
+                <path d="M 200 150 L 600 150 L 600 850 L 200 850 Z" fill="#f5f0e8" opacity="0.8"/>
+                <path d="M 600 150 L 1000 150 L 1000 850 L 600 850 Z" fill="#f5f0e8" opacity="0.8"/>
+                
+                <!-- Horizontal pathways -->
+                <rect x="100" y="140" width="1000" height="25" fill="#e8dcc4" opacity="0.9"/>
+                <rect x="100" y="450" width="900" height="25" fill="#e8dcc4" opacity="0.9"/>
+                <rect x="100" y="850" width="900" height="25" fill="#e8dcc4" opacity="0.9"/>
+                
+                <!-- Vertical pathways -->
+                <rect x="180" y="100" width="25" height="800" fill="#e8dcc4" opacity="0.9"/>
+                <rect x="580" y="100" width="25" height="800" fill="#e8dcc4" opacity="0.9"/>
+                <rect x="980" y="100" width="25" height="800" fill="#e8dcc4" opacity="0.9"/>
+                
+                <!-- MGR Statue marker -->
+                <circle cx="600" cy="462" r="8" fill="#cc0000"/>
+                <text x="600" y="495" text-anchor="middle" font-size="11" fill="#333" font-weight="bold">★ MGR Statue</text>
+            </svg>
+        </div>
+
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-marker" style="background: #4caf50;"></div>
+                <span>Start</span>
             </div>
-            
-            <div class="nav-item" id="nav-profile" onclick="location.href='profile.html'">
-                <i class="fas fa-user"></i>
-                <span>Profile</span>
+            <div class="legend-item">
+                <div class="legend-marker" style="background: #f44336;"></div>
+                <span>Destination</span>
             </div>
-        </nav>
+            <div class="legend-item">
+                <div class="legend-marker" style="background: #ff9800;"></div>
+                <span>On Route</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-line"></div>
+                <span>Active Path</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-marker" style="background: #9c27b0;"></div>
+                <span>Your Location (GPS)</span>
+            </div>
+        </div>
     </div>
 
+    <!-- Bottom Navigation Bar -->
+    <nav class="bottom-nav">
+        <div class="nav-item" id="nav-home" onclick="location.href='home.html'">
+            <i class="fas fa-home"></i>
+            <span>Home</span>
+        </div>
+        
+        <div class="nav-item active" id="nav-map">
+            <i class="fas fa-map-location-dot"></i>
+            <span>Campus Map</span>
+        </div>
+        
+        <div class="nav-item" id="nav-notifications" onclick="location.href='notifications.html'">
+            <i class="fas fa-bell"></i>
+            <span>Notifications</span>
+            <div class="nav-badge">2</div>
+        </div>
+        
+        <div class="nav-item" id="nav-profile" onclick="location.href='profile.html'">
+            <i class="fas fa-user"></i>
+            <span>Profile</span>
+        </div>
+    </nav>
+
     <script>
-        // IIFE to encapsulate variables
-        (() => {
-            // --- GLOBAL STATE & CONSTANTS ---
+        // Building data based on the new campus map
+        const buildings = {
+            // Top section (North)
+            'Chapel': { x: 460, y: 80, w: 100, h: 60, connections: ['Block 6', 'Girls Hostel'], color: '#fff8dc' },
+            'Girls Hostel': { x: 310, y: 200, w: 110, h: 70, connections: ['Chapel', 'Block 6', 'Exam Block'], color: '#ffb3ba' },
+            'Block 6': { x: 460, y: 200, w: 80, h: 70, connections: ['Chapel', 'Girls Hostel', 'Chemistry', 'CS Lab 1'], color: '#c8a2c8' },
+            'CS Lab 1': { x: 615, y: 180, w: 85, h: 50, connections: ['Block 6', 'Physics Lab'], color: '#a0c4ff' },
+            'Physics Lab': { x: 650, y: 260, w: 90, h: 60, connections: ['CS Lab 1', 'Chemistry', 'Masjid'], color: '#caffbf' },
             
-            const R = 6371; // Radius of Earth in km
-            let watchID = null; // ID for the continuous geolocation watch
+            // Middle-upper section
+            'Exam Block': { x: 260, y: 300, w: 95, h: 65, connections: ['Girls Hostel', 'Unknown Block 1', 'Chemistry'], color: '#ffc8dd' },
+            'Chemistry': { x: 415, y: 300, w: 100, h: 65, connections: ['Block 6', 'Physics Lab', 'Exam Block', 'Mechanical Block 2'], color: '#fdffb6' },
+            'Masjid': { x: 615, y: 380, w: 90, h: 70, connections: ['Physics Lab', 'Chain 2', 'Girls Veg Mess'], color: '#e8dcc4' },
+            'Chain 2': { x: 840, y: 320, w: 60, h: 120, connections: ['Masjid', 'Two Wheeler Parking'], color: '#d4a5a5' },
             
-            // Mock Landmarks (Original data)
-            const landmarks = [
-                { name: "The Main SCHOOL (Top Left)", lat: 37.7749, lon: -122.4194, mockX: 20, mockY: 20 },
-                { name: "The CHURCH (Top Right)", lat: 37.7899, lon: -122.3944, mockX: 80, mockY: 20 },
-                { name: "The PRIVATE HOUSE (Bottom Center)", lat: 37.7449, lon: -122.4544, mockX: 50, mockY: 80 }
-            ];
+            // Middle section
+            'Unknown Block 1': { x: 270, y: 390, w: 110, h: 60, connections: ['Exam Block', 'Temple 2', 'Mechanical Block 2'], color: '#e0e0e0' },
+            'Mechanical Block 2': { x: 465, y: 390, w: 105, h: 70, connections: ['Chemistry', 'Unknown Block 1', 'Girls Veg Mess'], color: '#c0c0c0' },
+            'Girls Veg Mess': { x: 615, y: 500, w: 115, h: 60, connections: ['Masjid', 'Mechanical Block 2', 'Outdoor Auditorium 1'], color: '#fffffc' },
+            'Two Wheeler Parking': { x: 845, y: 470, w: 55, h: 100, connections: ['Chain 2', 'TWW Hostel'], color: '#b8c9a8' },
+            
+            // Middle-lower section
+            'Bus Stop': { x: 110, y: 380, w: 95, h: 80, connections: ['Temple 2', 'Futs Stop'], color: '#ffdfba' },
+            'Temple 2': { x: 320, y: 490, w: 95, h: 60, connections: ['Bus Stop', 'Unknown Block 1', 'Block 2', 'Outdoor Auditorium 2'], color: '#fff0b3' },
+            'Block 2': { x: 295, y: 580, w: 95, h: 60, connections: ['Temple 2', 'Girls Veg Mess 2', 'Outdoor Auditorium 2'], color: '#9bf6ff' },
+            'Girls Veg Mess 2': { x: 445, y: 580, w: 115, h: 60, connections: ['Block 2', 'Girls Non Veg Auditorium'], color: '#fffffc' },
+            'Outdoor Auditorium 1': { x: 635, y: 590, w: 120, h: 70, connections: ['Girls Veg Mess', 'TWW Hostel', 'New Boys Hostel'], color: '#ffd6a5' },
+            'TWW Hostel': { x: 840, y: 540, w: 60, h: 100, connections: ['Two Wheeler Parking', 'Outdoor Auditorium 1'], color: '#d4a5a5' },
+            
+            // Lower section
+            'Futs Stop': { x: 100, y: 520, w: 60, h: 100, connections: ['Bus Stop', 'Outdoor Auditorium 2'], color: '#e8dcc4' },
+            'Outdoor Auditorium 2': { x: 330, y: 710, w: 120, h: 80, connections: ['Futs Stop', 'Temple 2', 'Block 2', 'Girls Non Veg Auditorium'], color: '#ffd6a5' },
+            'Girls Non Veg Auditorium': { x: 465, y: 680, w: 105, h: 90, connections: ['Girls Veg Mess 2', 'Outdoor Auditorium 2', 'Boys Hostel'], color: '#ffadad' },
+            'New Boys Hostel': { x: 640, y: 710, w: 135, h: 70, connections: ['Outdoor Auditorium 1', 'Boys Mess'], color: '#a8dadc' },
+            
+            // Bottom section
+            'Boys Hostel': { x: 460, y: 820, w: 110, h: 70, connections: ['Girls Non Veg Auditorium', 'Boys Mess'], color: '#a8dadc' },
+            'Boys Mess': { x: 470, y: 920, w: 90, h: 40, connections: ['Boys Hostel', 'New Boys Hostel'], color: '#fffffc' }
+        };
+        
+        const buildingNames = Object.keys(buildings);
 
-            // Helper function for Haversine distance calculation
-            function calculateDistance(lat1, lon1, lat2, lon2) {
-                const degToRad = (deg) => deg * (Math.PI / 180);
-                const dLat = degToRad(lat2 - lat1);
-                const dLon = degToRad(lon2 - lon1);
-                const a = 
-                    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-                    Math.cos(degToRad(lat1)) * Math.cos(degToRad(lat2)) *
-                    Math.sin(dLon / 2) * Math.sin(dLon / 2);
-                const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-                return R * c; 
-            }
+        // ===== LOCATION TRACKING CONFIGURATION =====
+        // IMPORTANT: Calibrate these coordinates for your actual campus!
+        // Use Google Maps to find accurate latitude/longitude for your campus boundaries
+        
+        const campusGPSBounds = {
+            // Example coordinates - REPLACE with your actual campus GPS boundaries
+            topLeft: { lat: 13.0827, lng: 80.2707 },      // Northwest corner
+            bottomRight: { lat: 13.0800, lng: 80.2750 }    // Southeast corner
+        };
 
-            // Function to stop the geolocation tracking (Used internally on error/refresh)
-            window.stopTracking = function() {
-                if (watchID !== null) {
-                    navigator.geolocation.clearWatch(watchID);
-                    watchID = null;
-                    console.log("Geolocation tracking stopped.");
+        let currentPath = [];
+        let selectedStart = null;
+        let selectedEnd = null;
+        let userLocation = null;
+        let watchId = null;
+        let isTrackingLocation = false;
+
+        // Speech Queue Mechanism
+        const SpeechQueue = {
+            queue: [],
+            isSpeaking: false,
+
+            add: function(text) {
+                this.queue.push(text);
+                if (!this.isSpeaking) {
+                    this.process();
                 }
-            }
-
-            // Core navigation logic (Called on successful geolocation update)
-            function navigate(userLat, userLon) {
-                // DOM elements must be selected as they are only present in the map view
-                const latDisplay = document.getElementById('latDisplay');
-                const lonDisplay = document.getElementById('lonDisplay');
-                const closestLandmark = document.getElementById('closestLandmark');
-                const distanceInfo = document.getElementById('distanceInfo');
-                const navigationResult = document.getElementById('navigationResult');
-                const userPointer = document.getElementById('userPointer');
-                const statusMessage = document.getElementById('statusMessage');
-
-                if (latDisplay && lonDisplay) {
-                    latDisplay.textContent = userLat.toFixed(7);
-                    lonDisplay.textContent = userLon.toFixed(7);
+            },
+            
+            process: function() {
+                if (this.queue.length === 0 || this.isSpeaking) {
+                    return;
                 }
+                
+                const nextText = this.queue.shift();
+                VoiceAssistant.speak(nextText, this.process.bind(this));
+            },
+            
+            clear: function() {
+                this.queue = [];
+                VoiceAssistant.stop();
+                this.isSpeaking = false;
+            }
+        };
 
-                let closestDist = Infinity;
-                let closestName = "N/A";
-                let totalWeight = 0;
-                let weightedMockX = 0;
-                let weightedMockY = 0;
+        // Voice Assistant Implementation
+        const VoiceAssistant = {
+            voice: null,
+            recognition: null,
 
-                landmarks.forEach(landmark => {
-                    const distance = calculateDistance(userLat, userLon, landmark.lat, landmark.lon);
-                    const weight = 1 / (distance + 0.001); 
+            getPreferredVoice: function() {
+                const voices = window.speechSynthesis.getVoices();
+                let preferred = voices.find(v => v.lang.startsWith('en-US') && (v.name.includes('Google') || v.name.includes('Samantha') || v.name.includes('Daniel')));
+                if (!preferred) {
+                    preferred = voices.find(v => v.lang.startsWith('en'));
+                }
+                return preferred || voices[0];
+            },
+            
+            speak: function(text, callback = null) {
+                if (!('speechSynthesis' in window)) {
+                    console.warn("Speech Synthesis API not supported.");
+                    return;
+                }
+                
+                const utterance = new SpeechSynthesisUtterance(text);
+                
+                if (!this.voice) {
+                    this.voice = this.getPreferredVoice();
+                }
+                
+                utterance.voice = this.voice;
+                utterance.pitch = 1;
+                utterance.rate = 1.0; 
 
-                    weightedMockX += landmark.mockX * weight;
-                    weightedMockY += landmark.mockY * weight;
-                    totalWeight += weight;
-                    
-                    if (distance < closestDist) {
-                        closestDist = distance;
-                        closestName = landmark.name;
+                utterance.onstart = () => { SpeechQueue.isSpeaking = true; };
+                utterance.onend = () => { 
+                    SpeechQueue.isSpeaking = false; 
+                    if (callback) {
+                        callback();
                     }
-                });
-                
-                const pointerX = weightedMockX / totalWeight;
-                const pointerY = weightedMockY / totalWeight;
-                const distanceString = closestDist.toFixed(3) + " km";
-                
-                if (closestLandmark) closestLandmark.textContent = 'You are closest to: ${closestName}';
-                if (distanceInfo) distanceInfo.textContent = 'Current distance to this landmark is approximately ${distanceString}.';
-
-                if (userPointer) {
-                    userPointer.style.left = '${pointerX}%';
-                    userPointer.style.top = '${pointerY}%';
-                    userPointer.classList.remove('hidden'); 
-                }
-
-                if (statusMessage) {
-                    statusMessage.className = 'p-3 bg-green-100 border border-green-300 text-green-800 rounded-lg text-sm font-medium';
-                    statusMessage.textContent = 'Live location tracking active.';
-                }
-                if (navigationResult) {
-                    navigationResult.classList.remove('border-indigo-500', 'bg-indigo-50', 'border-red-500', 'bg-red-50');
-                    navigationResult.classList.add('border-green-500', 'bg-green-50');
-                }
-            }
-
-            // Geolocation success callback
-            function success(pos) {
-                // Since there is no internal routing, we always navigate here
-                navigate(pos.coords.latitude, pos.coords.longitude);
-            }
-
-            // Geolocation error callback
-            function error(err) {
-                console.warn('ERROR(${err.code}): ${err.message}');
-                window.stopTracking();
-
-                // DOM elements must be selected as they are only present in the map view
-                const statusMessage = document.getElementById('statusMessage');
-                const closestLandmark = document.getElementById('closestLandmark');
-                const distanceInfo = document.getElementById('distanceInfo');
-                const navigationResult = document.getElementById('navigationResult');
-                const userPointer = document.getElementById('userPointer');
-
-                if (statusMessage) {
-                    statusMessage.className = 'p-3 bg-red-100 border border-red-300 text-red-800 rounded-lg text-sm font-medium';
-                    let errorMessage = "Could not get location.";
-                    if (err.code === 1) {
-                        errorMessage = "Access Denied: Please enable location services for this site.";
-                    } else if (err.code === 2) {
-                        errorMessage = "Position Unavailable: GPS signal lost or weak.";
-                    }
-                    statusMessage.textContent = 'Error: ${errorMessage}. Please restart tracking.';
-                }
-                if (closestLandmark) closestLandmark.textContent = "Navigation Failed";
-                if (distanceInfo) distanceInfo.textContent = "Cannot calculate proximity without location data.";
-                
-                if (navigationResult) {
-                    navigationResult.classList.remove('border-indigo-500', 'bg-indigo-50', 'border-green-500', 'bg-green-50');
-                    navigationResult.classList.add('border-red-500', 'bg-red-50');
-                }
-                if (userPointer) userPointer.classList.add('hidden'); 
-            }
-
-            // Main function to get location and start continuous tracking
-            window.getAndNavigate = function() {
-                // Clear any existing watch to prevent duplicates
-                window.stopTracking(); 
-
-                const statusMessage = document.getElementById('statusMessage');
-                if (statusMessage) {
-                    statusMessage.className = 'p-3 bg-blue-100 border border-blue-300 text-blue-800 rounded-lg text-sm font-medium';
-                    statusMessage.textContent = 'Attempting to track your live location...';
-                }
-                
-                const options = {
-                    enableHighAccuracy: true,
-                    timeout: 10000, 
-                    maximumAge: 0 
+                };
+                utterance.onerror = (e) => { 
+                    SpeechQueue.isSpeaking = false; 
+                    console.error('Speech Synthesis Error:', e);
                 };
 
-                if (navigator.geolocation) {
-                    // Start continuous position tracking
-                    watchID = navigator.geolocation.watchPosition(success, error, options);
-                } else {
-                    if (statusMessage) {
-                        statusMessage.className = 'p-3 bg-red-100 border border-red-300 text-red-800 rounded-lg text-sm font-medium';
-                        statusMessage.textContent = 'Error: Geolocation is not supported by this browser.';
+                window.speechSynthesis.speak(utterance);
+            },
+            
+            stop: function() {
+                if ('speechSynthesis' in window && window.speechSynthesis.speaking) {
+                    window.speechSynthesis.cancel();
+                }
+            },
+            
+            startRecognition: function() {
+                if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+                    this.speak("Voice input is not supported by your browser. Please use the dropdown menus.");
+                    return;
+                }
+                
+                this.speak("I'm listening. You can say things like: go from Chapel to Masjid, or just say the building names.");
+
+                const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                this.recognition = new SpeechRecognition();
+                this.recognition.lang = 'en-US'; 
+                this.recognition.interimResults = false;
+                this.recognition.maxAlternatives = 3;
+                
+                const voiceBtn = document.getElementById('voiceInputBtn');
+                voiceBtn.textContent = "🔴 Listening...";
+                voiceBtn.disabled = true;
+
+                this.recognition.onresult = (event) => {
+                    for (let i = 0; i < event.results[0].length; i++) {
+                        const transcript = event.results[0][i].transcript;
+                        console.log(`Alternative ${i + 1}: ${transcript}`);
+                        
+                        const result = this.tryProcessVoiceCommand(transcript);
+                        if (result) {
+                            this.processVoiceCommand(transcript);
+                            return;
+                        }
+                    }
+                    
+                    const transcript = event.results[0][0].transcript;
+                    this.processVoiceCommand(transcript);
+                };
+
+                this.recognition.onerror = (event) => {
+                    voiceBtn.textContent = "🎙️ Set Destination by Voice";
+                    voiceBtn.disabled = false;
+                    
+                    if (event.error === 'no-speech') {
+                        this.speak("I didn't hear anything. Please try again.");
+                    } else if (event.error === 'audio-capture') {
+                        this.speak("Microphone not detected. Please check your device settings.");
+                    } else {
+                        this.speak("Sorry, something went wrong. Please try again.");
+                    }
+                };
+
+                this.recognition.onend = () => {
+                    voiceBtn.textContent = "🎙️ Set Destination by Voice";
+                    voiceBtn.disabled = false;
+                };
+
+                this.recognition.start();
+            },
+            
+            tryProcessVoiceCommand: function(transcript) {
+                const lowerTranscript = transcript.toLowerCase();
+                
+                const patterns = [
+                    { start: 'go from ', to: ' to ' },
+                    { start: 'navigate from ', to: ' to ' },
+                    { start: 'take me from ', to: ' to ' },
+                    { start: 'from ', to: ' to ' },
+                    { start: 'i want to go from ', to: ' to ' },
+                    { start: 'directions from ', to: ' to ' },
+                    { start: 'route from ', to: ' to ' }
+                ];
+                
+                for (const pattern of patterns) {
+                    if (lowerTranscript.includes(pattern.start) && lowerTranscript.includes(pattern.to)) {
+                        let parts = lowerTranscript.split(pattern.start)[1].split(pattern.to);
+                        if (parts.length === 2) {
+                            const startBuilding = this.findClosestBuilding(parts[0].trim());
+                            const endBuilding = this.findClosestBuilding(parts[1].trim());
+                            if (startBuilding && endBuilding) {
+                                return true;
+                            }
+                        }
                     }
                 }
+                
+                const foundBuildings = this.findAllBuildingsInText(lowerTranscript);
+                return foundBuildings.length >= 2;
+            },
+            
+            processVoiceCommand: function(transcript) {
+                const lowerTranscript = transcript.toLowerCase();
+                let startBuilding = '';
+                let endBuilding = '';
+                
+                const patterns = [
+                    { start: 'go from ', to: ' to ' },
+                    { start: 'navigate from ', to: ' to ' },
+                    { start: 'take me from ', to: ' to ' },
+                    { start: 'from ', to: ' to ' },
+                    { start: 'i want to go from ', to: ' to ' },
+                    { start: 'directions from ', to: ' to ' },
+                    { start: 'route from ', to: ' to ' }
+                ];
+                
+                for (const pattern of patterns) {
+                    if (lowerTranscript.includes(pattern.start) && lowerTranscript.includes(pattern.to)) {
+                        let parts = lowerTranscript.split(pattern.start)[1].split(pattern.to);
+                        if (parts.length === 2) {
+                            const rawStart = parts[0].trim();
+                            const rawEnd = parts[1].trim();
+
+                            startBuilding = this.findClosestBuilding(rawStart);
+                            endBuilding = this.findClosestBuilding(rawEnd);
+                            
+                            if (startBuilding && endBuilding) break;
+                        }
+                    }
+                }
+                
+                if (!startBuilding || !endBuilding) {
+                    const foundBuildings = this.findAllBuildingsInText(lowerTranscript);
+                    if (foundBuildings.length >= 2) {
+                        startBuilding = foundBuildings[0];
+                        endBuilding = foundBuildings[1];
+                    } else if (foundBuildings.length === 1) {
+                        this.speak(`I heard ${foundBuildings[0]}. Please specify both start and destination buildings.`);
+                        return;
+                    }
+                }
+
+                if (startBuilding && endBuilding) {
+                    document.getElementById('start').value = startBuilding;
+                    document.getElementById('end').value = endBuilding;
+                    updateNavigateButton();
+                    this.speak(`Got it! Route from ${startBuilding} to ${endBuilding}. Click navigate to start.`);
+                } else {
+                    this.speak("I couldn't identify both buildings. Try saying something like: go from Chapel to Masjid.");
+                }
+            },
+            
+            findClosestBuilding: function(spokenText) {
+                const cleanText = spokenText.replace(/\b(the|a|an)\b/gi, '').trim();
+                
+                for (const name of buildingNames) {
+                    const lowerName = name.toLowerCase();
+                    if (lowerName === cleanText) {
+                        return name;
+                    }
+                }
+                
+                for (const name of buildingNames) {
+                    const lowerName = name.toLowerCase();
+                    if (lowerName.includes(cleanText) || cleanText.includes(lowerName)) {
+                        return name;
+                    }
+                }
+                
+                const spokenWords = cleanText.split(/\s+/);
+                for (const name of buildingNames) {
+                    const nameWords = name.toLowerCase().split(/\s+/);
+                    for (const spokenWord of spokenWords) {
+                        for (const nameWord of nameWords) {
+                            if (nameWord.includes(spokenWord) || spokenWord.includes(nameWord)) {
+                                if (spokenWord.length >= 3) {
+                                    return name;
+                                }
+                            }
+                        }
+                    }
+                }
+                
+                const aliases = {
+                    'chapel': 'Chapel',
+                    'church': 'Chapel',
+                    'hostel': 'Boys Hostel',
+                    'girls': 'Girls Hostel',
+                    'boys': 'Boys Hostel',
+                    'mess': 'Boys Mess',
+                    'masjid': 'Masjid',
+                    'mosque': 'Masjid',
+                    'lab': 'CS Lab 1',
+                    'cs': 'CS Lab 1',
+                    'computer': 'CS Lab 1',
+                    'physics': 'Physics Lab',
+                    'chemistry': 'Chemistry',
+                    'mechanical': 'Mechanical Block 2',
+                    'exam': 'Exam Block',
+                    'test': 'Exam Block',
+                    'bus': 'Bus Stop',
+                    'temple': 'Temple 2',
+                    'auditorium': 'Outdoor Auditorium 1',
+                    'parking': 'Two Wheeler Parking',
+                    'bike': 'Two Wheeler Parking'
+                };
+                
+                for (const [key, value] of Object.entries(aliases)) {
+                    if (cleanText.includes(key) || key.includes(cleanText)) {
+                        return value;
+                    }
+                }
+                
+                return null;
+            },
+            
+            findAllBuildingsInText: function(text) {
+                const found = [];
+                const cleanText = text.replace(/\b(the|a|an)\b/gi, ' ').toLowerCase();
+                
+                for (const name of buildingNames) {
+                    const lowerName = name.toLowerCase();
+                    const nameWords = lowerName.split(/\s+/);
+                    
+                    for (const word of nameWords) {
+                        if (word.length >= 3 && cleanText.includes(word)) {
+                            if (!found.includes(name)) {
+                                found.push(name);
+                            }
+                            break;
+                        }
+                    }
+                }
+                
+                return found;
+            }
+        };
+
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.onvoiceschanged = () => {
+                VoiceAssistant.voice = VoiceAssistant.getPreferredVoice();
+            };
+        }
+
+        // ===== LOCATION TRACKING FUNCTIONS =====
+        
+        function latLngToSVG(lat, lng) {
+            const bounds = campusGPSBounds;
+            
+            const relativeX = (lng - bounds.topLeft.lng) / (bounds.bottomRight.lng - bounds.topLeft.lng);
+            const relativeY = (lat - bounds.topLeft.lat) / (bounds.bottomRight.lat - bounds.topLeft.lat);
+            
+            const svgX = 100 + (relativeX * 1000);
+            const svgY = 100 + (relativeY * 800);
+            
+            return { x: svgX, y: svgY };
+        }
+        
+        function findNearestBuilding(svgX, svgY) {
+            let nearest = null;
+            let minDistance = Infinity;
+            
+            Object.entries(buildings).forEach(([name, data]) => {
+                const centerX = data.x + data.w / 2;
+                const centerY = data.y + data.h / 2;
+                const distance = Math.sqrt(Math.pow(centerX - svgX, 2) + Math.pow(centerY - svgY, 2));
+                
+                if (distance < minDistance) {
+                    minDistance = distance;
+                    nearest = name;
+                }
+            });
+            
+            return { building: nearest, distance: minDistance };
+        }
+        
+        function updateUserLocationMarker(svgX, svgY) {
+            const svg = document.getElementById('campusMap');
+            let marker = svg.querySelector('.user-location-marker');
+            
+            if (!marker) {
+                const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+                g.classList.add('user-location-marker');
+                
+                const outerCircle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+                outerCircle.setAttribute('r', '20');
+                outerCircle.setAttribute('fill', '#9c27b0');
+                outerCircle.setAttribute('opacity', '0.2');
+                outerCircle.classList.add('accuracy-circle');
+                
+                const innerCircle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+                innerCircle.setAttribute('r', '10');
+                innerCircle.setAttribute('fill', '#9c27b0');
+                innerCircle.setAttribute('stroke', 'white');
+                innerCircle.setAttribute('stroke-width', '3');
+                
+                const arrow = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                arrow.setAttribute('d', 'M 0,-8 L 4,4 L 0,0 L -4,4 Z');
+                arrow.setAttribute('fill', 'white');
+                arrow.classList.add('direction-arrow');
+                
+                g.appendChild(outerCircle);
+                g.appendChild(innerCircle);
+                g.appendChild(arrow);
+                svg.appendChild(g);
+                marker = g;
+            }
+            
+            marker.setAttribute('transform', `translate(${svgX}, ${svgY})`);
+        }
+        
+        function updateLocationAccuracy(accuracy) {
+            const accuracySpan = document.getElementById('locationAccuracy');
+            const accuracyCircle = document.querySelector('.accuracy-circle');
+            
+            let accuracyClass = 'accuracy-low';
+            let accuracyText = 'Low';
+            let radius = 30;
+            
+            if (accuracy < 10) {
+                accuracyClass = 'accuracy-high';
+                accuracyText = 'High';
+                radius = 15;
+            } else if (accuracy < 30) {
+                accuracyClass = 'accuracy-medium';
+                accuracyText = 'Medium';
+                radius = 20;
+            }
+            
+            accuracySpan.className = `location-accuracy ${accuracyClass}`;
+            accuracySpan.textContent = `${accuracyText} (±${Math.round(accuracy)}m)`;
+            
+            if (accuracyCircle) {
+                const scale = Math.min(accuracy / 2, 50);
+                accuracyCircle.setAttribute('r', scale);
+            }
+        }
+        
+        function startLocationTracking() {
+            if (!navigator.geolocation) {
+                alert('Geolocation is not supported by your browser');
+                return;
+            }
+            
+            const trackBtn = document.getElementById('trackLocationBtn');
+            const locationInfo = document.getElementById('locationInfo');
+            const statusSpan = document.getElementById('locationStatus');
+            
+            if (isTrackingLocation) {
+                if (watchId !== null) {
+                    navigator.geolocation.clearWatch(watchId);
+                    watchId = null;
+                }
+                isTrackingLocation = false;
+                trackBtn.textContent = '📍 Track My Location';
+                trackBtn.style.background = '#9c27b0';
+                locationInfo.classList.remove('active');
+                
+                const marker = document.querySelector('.user-location-marker');
+                if (marker) marker.remove();
+                
+                VoiceAssistant.speak('Location tracking stopped');
+                return;
+            }
+            
+            isTrackingLocation = true;
+            trackBtn.textContent = '⏹️ Stop Tracking';
+            trackBtn.style.background = '#d32f2f';
+            locationInfo.classList.add('active');
+            statusSpan.textContent = 'Acquiring GPS signal...';
+            
+            VoiceAssistant.speak('Starting location tracking. Please wait while we acquire your GPS signal.');
+            
+            const options = {
+                enableHighAccuracy: true,
+                timeout: 10000,
+                maximumAge: 0
+            };
+            
+            watchId = navigator.geolocation.watchPosition(
+                (position) => {
+                    const { latitude, longitude, accuracy } = position.coords;
+                    userLocation = { lat: latitude, lng: longitude, accuracy };
+                    
+                    const svgPos = latLngToSVG(latitude, longitude);
+                    updateUserLocationMarker(svgPos.x, svgPos.y);
+                    
+                    const nearest = findNearestBuilding(svgPos.x, svgPos.y);
+                    
+                    statusSpan.textContent = 'Active';
+                    document.getElementById('nearestBuilding').textContent = nearest.building;
+                    document.getElementById('distanceToBuilding').textContent = `${Math.round(nearest.distance)}m on map`;
+                    updateLocationAccuracy(accuracy);
+                    
+                    const startSelect = document.getElementById('start');
+                    if (!startSelect.value) {
+                        startSelect.value = nearest.building;
+                        updateNavigateButton();
+                    }
+                    
+                    if (!window.locationAnnounced) {
+                        VoiceAssistant.speak(`Location acquired. You are near ${nearest.building}.`);
+                        window.locationAnnounced = true;
+                    }
+                },
+                (error) => {
+                    let errorMsg = 'Unable to get location. ';
+                    switch(error.code) {
+                        case error.PERMISSION_DENIED:
+                            errorMsg += 'Please allow location access.';
+                            break;
+                        case error.POSITION_UNAVAILABLE:
+                            errorMsg += 'Location information unavailable.';
+                            break;
+                        case error.TIMEOUT:
+                            errorMsg += 'Location request timed out.';
+                            break;
+                    }
+                    statusSpan.textContent = errorMsg;
+                    VoiceAssistant.speak(errorMsg);
+                    
+                    isTrackingLocation = false;
+                    trackBtn.textContent = '📍 Track My Location';
+                    trackBtn.style.background = '#9c27b0';
+                },
+                options
+            );
+        }
+
+        function getCenter(name) {
+            const b = buildings[name];
+            return { x: b.x + b.w / 2, y: b.y + b.h / 2 };
+        }
+
+        function getCardinalDirection(from, to) {
+            const c1 = getCenter(from);
+            const c2 = getCenter(to);
+            const dx = c2.x - c1.x;
+            const dy = c2.y - c1.y;
+
+            const absDx = Math.abs(dx);
+            const absDy = Math.abs(dy);
+
+            let direction = "";
+
+            if (absDx > absDy * 2) { 
+                direction = dx > 0 ? "East" : "West";
+            } else if (absDy > absDx * 2) { 
+                direction = dy > 0 ? "South" : "North";
+            } else { 
+                direction += dy < 0 ? "North" : "South";
+                direction += dx > 0 ? "East" : "West";
+            }
+            return direction;
+        }
+
+        function getTurnInstruction(prev, current, next) {
+            const p = getCenter(prev);
+            const c = getCenter(current);
+            const n = getCenter(next);
+
+            const v1x = c.x - p.x;
+            const v1y = c.y - p.y;
+            const v2x = n.x - c.x;
+            const v2y = n.y - c.y;
+
+            const crossProduct = v1x * v2y - v1y * v2x;
+
+            if (Math.abs(crossProduct) < 10000) { 
+                return "Continue";
+            } else if (crossProduct > 0) {
+                return "Left";
+            } else {
+                return "Right";
+            }
+        }
+
+        function getDistance(from, to) {
+            const b1 = buildings[from];
+            const b2 = buildings[to];
+            const dx = (b2.x + b2.w/2) - (b1.x + b1.w/2);
+            const dy = (b2.y + b2.h/2) - (b1.y + b1.h/2);
+            return Math.sqrt(dx * dx + dy * dy);
+        }
+        
+        function init() {
+            populateDropdowns();
+            drawBuildings();
+            setupEventListeners();
+            updateNavigateButton();
+        }
+
+        function populateDropdowns() {
+            const startSelect = document.getElementById('start');
+            const endSelect = document.getElementById('end');
+
+            buildingNames.sort().forEach(name => {
+                const opt1 = document.createElement('option');
+                opt1.value = name;
+                opt1.textContent = name;
+                startSelect.appendChild(opt1);
+
+                const opt2 = document.createElement('option');
+                opt2.value = name;
+                opt2.textContent = name;
+                endSelect.appendChild(opt2);
+            });
+        }
+
+        function drawBuildings() {
+            const svg = document.getElementById('campusMap');
+            document.querySelectorAll('g.building, .building-shadow, .path-line').forEach(el => el.remove());
+
+            Object.entries(buildings).forEach(([name, data]) => {
+                const existing = svg.querySelector(`g[data-building="${name}"]`);
+                if (existing) return;
+
+                const shadow = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+                shadow.setAttribute('x', data.x + 3);
+                shadow.setAttribute('y', data.y + 3);
+                shadow.setAttribute('width', data.w);
+                shadow.setAttribute('height', data.h);
+                shadow.setAttribute('fill', '#000');
+                shadow.setAttribute('opacity', '0.15');
+                shadow.setAttribute('rx', '4');
+                shadow.setAttribute('class', 'building-shadow');
+
+                const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+                g.classList.add('building');
+                g.setAttribute('data-building', name);
+
+                const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+                rect.setAttribute('x', data.x);
+                rect.setAttribute('y', data.y);
+                rect.setAttribute('width', data.w);
+                rect.setAttribute('height', data.h);
+                rect.setAttribute('fill', data.color);
+                rect.setAttribute('stroke', '#333');
+                rect.setAttribute('stroke-width', '2.5');
+                rect.setAttribute('rx', '4');
+
+                const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                text.setAttribute('x', data.x + data.w / 2);
+                text.setAttribute('y', data.y + data.h / 2);
+                text.setAttribute('text-anchor', 'middle');
+                text.setAttribute('dominant-baseline', 'middle');
+                text.setAttribute('font-size', '11');
+                text.setAttribute('font-weight', 'bold');
+                text.setAttribute('fill', '#222');
+
+                const words = name.split(' ');
+                if (words.length > 2) {
+                    words.forEach((word, i) => {
+                        const tspan = document.createElementNS('http://www.w3.org/2000/svg', 'tspan');
+                        tspan.setAttribute('x', data.x + data.w / 2);
+                        tspan.setAttribute('dy', i === 0 ? '-0.7em' : '1em');
+                        tspan.textContent = word;
+                        text.appendChild(tspan);
+                    });
+                } else if (words.length === 2) {
+                    words.forEach((word, i) => {
+                        const tspan = document.createElementNS('http://www.w3.org/2000/svg', 'tspan');
+                        tspan.setAttribute('x', data.x + data.w / 2);
+                        tspan.setAttribute('dy', i === 0 ? '-0.5em' : '1em');
+                        tspan.textContent = word;
+                        text.appendChild(tspan);
+                    });
+                } else {
+                    text.textContent = name;
+                }
+
+                const marker = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+                marker.classList.add('marker');
+                marker.setAttribute('cx', data.x + data.w / 2);
+                marker.setAttribute('cy', data.y + data.h / 2);
+                marker.setAttribute('r', '0');
+                marker.setAttribute('fill', '#2196f3');
+                marker.setAttribute('stroke', 'white');
+                marker.setAttribute('stroke-width', '3');
+
+                svg.appendChild(shadow);
+                g.appendChild(rect);
+                g.appendChild(marker);
+                g.appendChild(text);
+                svg.appendChild(g);
+
+                g.addEventListener('click', () => {
+                    const startSelect = document.getElementById('start');
+                    const endSelect = document.getElementById('end');
+                    if (!startSelect.value) {
+                        startSelect.value = name;
+                    } else if (!endSelect.value) {
+                        endSelect.value = name;
+                    } else {
+                        endSelect.value = name;
+                    }
+                    updateNavigateButton();
+                });
+            });
+        }
+
+        function setupEventListeners() {
+            document.getElementById('navigateBtn').addEventListener('click', navigate);
+            document.getElementById('clearBtn').addEventListener('click', clearPath);
+            document.getElementById('voiceInputBtn').addEventListener('click', () => VoiceAssistant.startRecognition());
+            document.getElementById('trackLocationBtn').addEventListener('click', startLocationTracking);
+            document.getElementById('start').addEventListener('change', updateNavigateButton);
+            document.getElementById('end').addEventListener('change', updateNavigateButton);
+            document.getElementById('voiceMode').addEventListener('change', () => SpeechQueue.clear());
+        }
+
+        function updateNavigateButton() {
+            const start = document.getElementById('start').value;
+            const end = document.getElementById('end').value;
+            document.getElementById('navigateBtn').disabled = !start || !end || start === end;
+        }
+
+        function navigate() {
+            SpeechQueue.clear();
+
+            selectedStart = document.getElementById('start').value;
+            selectedEnd = document.getElementById('end').value;
+
+            if (!selectedStart || !selectedEnd || selectedStart === selectedEnd) {
+                VoiceAssistant.speak("Please select different start and end locations.");
+                return;
             }
 
-            // Initialize the app by starting location tracking
-            window.onload = window.getAndNavigate;
+            currentPath = findPath(selectedStart, selectedEnd);
 
-        })();
+            if (currentPath.length > 0) {
+                displayPath();
+                drawPath();
+                updateMarkers();
+            } else {
+                VoiceAssistant.speak("No path found between the selected buildings.");
+                alert('No path found between the selected buildings.');
+            }
+        }
+
+        function findPath(start, end) {
+            const queue = [{ node: start, path: [start], cost: 0 }];
+            const visitedCosts = new Map(); 
+
+            visitedCosts.set(start, 0);
+
+            while (queue.length > 0) {
+                queue.sort((a, b) => {
+                    const aDist = a.cost + heuristic(a.node, end);
+                    const bDist = b.cost + heuristic(b.node, end);
+                    return aDist - bDist;
+                });
+
+                const { node, path, cost } = queue.shift();
+
+                if (node === end) return path;
+
+                const connections = buildings[node].connections || [];
+                connections.forEach(neighbor => {
+                    if (!buildings[neighbor]) return; 
+                    const newCost = cost + getDistance(node, neighbor);
+                    if (newCost < (visitedCosts.get(neighbor) || Infinity)) {
+                        visitedCosts.set(neighbor, newCost);
+                        queue.push({
+                            node: neighbor,
+                            path: [...path, neighbor],
+                            cost: newCost
+                        });
+                    }
+                });
+            }
+
+            return [];
+        }
+
+        function heuristic(from, to) {
+            return getDistance(from, to);
+        }
+        
+        function displayPath() {
+            const pathInfo = document.getElementById('pathInfo');
+            const pathText = document.getElementById('pathText');
+            const distanceText = document.getElementById('distanceText');
+            const stepsList = document.getElementById('stepsList');
+            const voiceMode = document.getElementById('voiceMode').value;
+            
+            pathText.textContent = currentPath.join(' → ');
+
+            let totalDist = 0;
+            stepsList.innerHTML = '';
+            
+            SpeechQueue.add(`Navigation started from ${currentPath[0]} to ${currentPath[currentPath.length - 1]}.`);
+
+            let startListItem = document.createElement('li');
+            startListItem.innerHTML = `<strong>Start</strong> at the <strong>${currentPath[0]}</strong>.`;
+            stepsList.appendChild(startListItem);
+
+            for (let i = 0; i < currentPath.length - 1; i++) {
+                const from = currentPath[i];
+                const to = currentPath[i + 1];
+                const distSegment = getDistance(from, to);
+                totalDist += distSegment;
+                
+                const roundedDist = Math.round(distSegment);
+                const direction = getCardinalDirection(from, to);
+                let turnInstruction = '';
+                let voiceTurn = '';
+                let isKeyTurn = false;
+                let instruction = '';
+
+                if (i > 0) { 
+                    const prev = currentPath[i - 1];
+                    const turn = getTurnInstruction(prev, from, to);
+                    
+                    if (turn !== 'Continue') {
+                        turnInstruction = `Turn ${turn} `;
+                        voiceTurn = `Turn ${turn} `;
+                        isKeyTurn = true;
+                    } else {
+                        turnInstruction = `Continue straight `;
+                        voiceTurn = `Continue straight `; 
+                    }
+                } else {
+                    turnInstruction = `Head `;
+                    voiceTurn = `Head `;
+                }
+                
+                if (i === currentPath.length - 2) {
+                    instruction = `Arrive at the <strong>${to}</strong>. You have reached your destination.`;
+                    isKeyTurn = true; 
+                    SpeechQueue.add(`You have arrived at your destination, the ${to}. Congratulations!`);
+                } else {
+                    instruction = `${turnInstruction}${direction} towards the ${to}. (Approx. ${roundedDist}m)`;
+                    let announcement = `${voiceTurn}${direction} for approximately ${roundedDist} meters towards the ${to}.`;
+
+                    if (voiceMode === 'detailed') {
+                        SpeechQueue.add(announcement);
+                    } else if (voiceMode === 'lenient' && isKeyTurn) {
+                        SpeechQueue.add(announcement);
+                    }
+                }
+                
+                let listItem = document.createElement('li');
+                listItem.innerHTML = instruction;
+                stepsList.appendChild(listItem);
+            }
+
+            distanceText.textContent = Math.round(totalDist) + 'm';
+            pathInfo.classList.add('active');
+            
+            SpeechQueue.process();
+        }
+
+        function drawPath() {
+            document.querySelectorAll('.path-line').forEach(el => el.remove());
+
+            const svg = document.getElementById('campusMap');
+
+            for (let i = 0; i < currentPath.length - 1; i++) {
+                const from = buildings[currentPath[i]];
+                const to = buildings[currentPath[i + 1]];
+
+                const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                line.classList.add('path-line');
+                line.setAttribute('x1', from.x + from.w / 2);
+                line.setAttribute('y1', from.y + from.h / 2);
+                line.setAttribute('x2', to.x + to.w / 2);
+                line.setAttribute('y2', to.y + to.h / 2);
+                line.setAttribute('stroke', '#f44336');
+                line.setAttribute('stroke-width', '6');
+                line.setAttribute('opacity', '0.9');
+                line.setAttribute('stroke-linecap', 'round');
+
+                svg.appendChild(line);
+            }
+
+            document.querySelectorAll('g.building').forEach(g => {
+                svg.appendChild(g);
+            });
+        }
+
+        function updateMarkers() {
+            document.querySelectorAll('.marker').forEach(marker => {
+                const building = marker.parentElement.getAttribute('data-building');
+
+                if (building === selectedStart) {
+                    marker.setAttribute('r', '12');
+                    marker.setAttribute('fill', '#4caf50');
+                    marker.classList.add('pulse');
+                } else if (building === selectedEnd) {
+                    marker.setAttribute('r', '12');
+                    marker.setAttribute('fill', '#f44336');
+                    marker.classList.add('pulse');
+                } else if (currentPath.includes(building)) {
+                    marker.setAttribute('r', '10');
+                    marker.setAttribute('fill', '#ff9800');
+                    marker.classList.remove('pulse');
+                } else {
+                    marker.setAttribute('r', '0');
+                    marker.classList.remove('pulse');
+                }
+            });
+        }
+
+        function clearPath() {
+            SpeechQueue.clear(); 
+
+            currentPath = [];
+            selectedStart = null;
+            selectedEnd = null;
+
+            document.getElementById('start').value = '';
+            document.getElementById('end').value = '';
+            document.getElementById('pathInfo').classList.remove('active');
+            document.querySelectorAll('.path-line').forEach(el => el.remove());
+            document.getElementById('stepsList').innerHTML = '';
+            document.querySelectorAll('.marker').forEach(marker => {
+                marker.setAttribute('r', '0');
+                marker.classList.remove('pulse');
+            });
+
+            updateNavigateButton();
+        }
+
+        init();
     </script>
 </body>
 </html>
